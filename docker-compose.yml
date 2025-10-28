@@ -1,0 +1,39 @@
+#ref: https://www.cockroachlabs.com/docs/v25.3/start-a-local-cluster-in-docker-linux#start-a-single-node-cluster
+services:
+  cockroachdb:
+    image: cockroachdb/cockroach:v25.3.3
+    command: >
+      start-single-node
+      --certs-dir=/cockroach/certs
+    ports:
+      - "26257:26257"
+    volumes:
+      - roach-single:/cockroach/cockroach-data
+      - roach-certs:/cockroach/certs
+    environment:
+      # if prior volumes already exist, these will have no effect
+      - COCKROACH_DATABASE=althire
+      - COCKROACH_USER=aseer
+      - COCKROACH_PASSWORD=password
+
+  redis:
+    image: redis:8.2.2-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    ports:
+      - "5540:5540"
+    volumes:
+      - redisinsight-data:/data
+    depends_on:
+      - redis
+
+volumes:
+  roach-single:
+  roach-certs:
+  redis_data:
+  redisinsight-data:

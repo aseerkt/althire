@@ -20,6 +20,9 @@
       "recommended": true,
       "suspicious": {
         "noUnknownAtRules": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
       }
     },
     "domains": {
@@ -32,6 +35,14 @@
       "source": {
         "organizeImports": "on"
       }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded",
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "single",
+      "trailingCommas": "all"
     }
   }
 }

@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+// Tables
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  username String @unique
+  email    String @unique
+
+  password String
+  salt     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  headline   String?
+  locationId String?
+  location   Location? @relation(fields: [locationId], references: [id])
+
+  jobApplication      JobApplication[]
+  organizationMembers OrganizationMembers[]
+}
+
+model Organization {
+  id          String           @id @default(uuid())
+  name        String
+  slug        String           @unique
+  type        OrganizationType @default(COMPANY)
+  website     String?
+  description String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  industry    Industry
+  size        OrganizationSize
+  tagline     String?
+
+  locationId String?
+  location   Location? @relation(fields: [locationId], references: [id])
+
+  jobs                Job[]
+  organizationMembers OrganizationMembers[]
+
+  @@index([type])
+}
+
+model OrganizationMembers {
+  id             String     @id @default(uuid())
+  organizationId String
+  userId         String
+  role           MemberRole @default(MEMBER)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+}
+
+model Job {
+  id             String         @id @default(uuid())
+  title          String
+  description    String
+  workMode       WorkMode       @default(ONSITE)
+  employmentType EmploymentType @default(FULL_TIME)
+  organizationId String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  locationId     String?
+
+  location        Location?        @relation(fields: [locationId], references: [id])
+  organization    Organization     @relation(fields: [organizationId], references: [id])
+  jobApplications JobApplication[]
+}
+
+model JobApplication {
+  id        String               @id @default(uuid())
+  userId    String
+  jobId     String
+  status    JobApplicationStatus @default(PENDING)
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  job  Job  @relation(fields: [jobId], references: [id])
+
+  @@unique([userId, jobId])
+}
+
+model Location {
+  id          String   @id @default(uuid())
+  latitude    Float?
+  longitude   Float?
+  city        String
+  region      String
+  country     String
+  countryCode String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users         User[]
+  jobs          Job[]
+  organizations Organization[]
+}
+
+// Enums
+
+enum WorkMode {
+  REMOTE @map("Remote")
+  ONSITE @map("On-site")
+  HYBRID @map("Hybrid")
+}
+
+enum EmploymentType {
+  FULL_TIME  @map("Full-time")
+  PART_TIME  @map("Part-time")
+  CONTRACT   @map("Contract")
+  TEMPORARY  @map("Temporary")
+  VOLUNTEER  @map("Volunteer")
+  INTERNSHIP @map("Internship")
+}
+
+enum JobApplicationStatus {
+  PENDING  @map("Pending")
+  REVIEWED @map("Reviewed")
+  ACCEPTED @map("Accepted")
+  REJECTED @map("Rejected")
+}
+
+enum MemberRole {
+  EMPLOYER @map("Employer")
+  ADMIN    @map("Admin")
+  MEMBER   @map("Member")
+}
+
+enum OrganizationType {
+  COMPANY
+  SCHOOL
+}
+
+enum Industry {
+  ACCOUNTING                          @map("Accounting")
+  ADVERTISING                         @map("Advertising")
+  AGRICULTURE                         @map("Agriculture")
+  AIRLINES_AVIATION                   @map("Airlines & Aviation")
+  APPAREL_FASHION                     @map("Apparel & Fashion")
+  ARCHITECTURE_PLANNING               @map("Architecture & Planning")
+  AUTOMOTIVE                          @map("Automotive")
+  BANKING                             @map("Banking")
+  BIOTECHNOLOGY                       @map("Biotechnology")
+  BROADCAST_MEDIA                     @map("Broadcast Media")
+  CHEMICALS                           @map("Chemicals")
+  CIVIL_ENGINEERING                   @map("Civil Engineering")
+  COMPUTER_HARDWARE                   @map("Computer Hardware")
+  COMPUTER_SOFTWARE                   @map("Computer Software")
+  CONSTRUCTION                        @map("Construction")
+  CONSULTING                          @map("Consulting")
+  CONSUMER_ELECTRONICS                @map("Consumer Electronics")
+  CONSUMER_GOODS                      @map("Consumer Goods")
+  EDUCATION                           @map("Education")
+  ELECTRICAL_ELECTRONIC_MANUFACTURING @map("Electrical/Electronic Manufacturing")
+  ENERGY                              @map("Energy")
+  ENTERTAINMENT                       @map("Entertainment")
+  ENVIRONMENTAL_SERVICES              @map("Environmental Services")
+  FINANCIAL_SERVICES                  @map("Financial Services")
+  FOOD_BEVERAGES                      @map("Food & Beverages")
+  GOVERNMENT_ADMINISTRATION           @map("Government Administration")
+  HEALTHCARE                          @map("Healthcare")
+  HOSPITALITY                         @map("Hospitality")
+  HUMAN_RESOURCES                     @map("Human Resources")
+  INDUSTRIAL_AUTOMATION               @map("Industrial Automation")
+  INFORMATION_SERVICES                @map("Information Services")
+  INFORMATION_TECHNOLOGY              @map("Information Technology")
+  INSURANCE                           @map("Insurance")
+  INTERNET                            @map("Internet")
+  INVESTMENT_BANKING                  @map("Investment Banking")
+  LAW_PRACTICE                        @map("Law Practice")
+  LEGAL_SERVICES                      @map("Legal Services")
+  LOGISTICS_SUPPLY_CHAIN              @map("Logistics & Supply Chain")
+  MANUFACTURING                       @map("Manufacturing")
+  MARKETING                           @map("Marketing")
+  MEDIA                               @map("Media")
+  MEDICAL_DEVICES                     @map("Medical Devices")
+  MINING_METALS                       @map("Mining & Metals")
+  NONPROFIT                           @map("Nonprofit Organization Management")
+  OIL_ENERGY                          @map("Oil & Energy")
+  PHARMACEUTICALS                     @map("Pharmaceuticals")
+  PUBLIC_RELATIONS                    @map("Public Relations & Communications")
+  REAL_ESTATE                         @map("Real Estate")
+  RESEARCH                            @map("Research")
+  RESTAURANTS                         @map("Restaurants")
+  RETAIL                              @map("Retail")
+  SPORTS                              @map("Sports")
+  TELECOMMUNICATIONS                  @map("Telecommunications")
+  TRANSPORTATION                      @map("Transportation")
+  UTILITIES                           @map("Utilities")
+  VENTURE_CAPITAL                     @map("Venture Capital & Private Equity")
+  WHOLESALE                           @map("Wholesale")
+}
+
+enum OrganizationSize {
+  SELF_EMPLOYED                     @map("Self-employed")
+  ONE_TO_TEN                        @map("1-10 employees")
+  ELEVEN_TO_FIFTY                   @map("11-50 employees")
+  FIFTY_ONE_TO_TWO_HUNDRED          @map("51-200 employees")
+  TWO_HUNDRED_ONE_TO_FIVE_HUNDRED   @map("201-500 employees")
+  FIVE_HUNDRED_ONE_TO_ONE_THOUSAND  @map("501-1,000 employees")
+  ONE_THOUSAND_ONE_TO_FIVE_THOUSAND @map("1,001-5,000 employees")
+  FIVE_THOUSAND_ONE_TO_TEN_THOUSAND @map("5,001-10,000 employees")
+  TEN_THOUSAND_PLUS                 @map("10,001+ employees")
+}
