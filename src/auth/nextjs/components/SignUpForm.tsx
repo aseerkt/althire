@@ -1,11 +1,11 @@
 'use client'
 
-import { InputField } from '@/components/form/InputField'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { InputField } from '@/components/form/InputField'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { signUp } from '../actions'
 import { type SignUpData, signUpSchema } from '../schema'
 

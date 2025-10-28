@@ -10,6 +10,12 @@ import {
 } from '@/generated/prisma'
 import { slugify } from '@/lib/utils'
 
+// Prisma Client
+
+const prisma = new PrismaClient()
+
+// Constants
+
 const USER_PASSWORD = 'test@123'
 const USER_SALT = 'salt'
 
@@ -17,12 +23,14 @@ const USER_COUNT = 50
 const COMPANY_COUNT = 20
 const JOB_COUNT = 20
 
-const prisma = new PrismaClient()
+// helpers
 
 function randomEnumValue<T extends object>(enumObj: T): T[keyof T] {
   const values = Object.values(enumObj) as T[keyof T][]
   return faker.helpers.arrayElement(values)
 }
+
+// MAIN
 
 async function main() {
   console.log('Seeding users...')
@@ -45,6 +53,7 @@ async function main() {
       .fill(0)
       .map<Prisma.OrganizationCreateManyInput>(() => ({
         name: faker.company.name(),
+        description: faker.lorem.paragraph(5),
         industry: randomEnumValue(Industry),
         size: randomEnumValue(OrganizationSize),
         slug: slugify(faker.company.name()),
@@ -80,7 +89,7 @@ async function main() {
       createManyJobInput.push({
         organizationId: companies[i].id,
         title: faker.person.jobTitle(),
-        description: faker.person.jobDescriptor(),
+        description: faker.lorem.paragraph(10),
         employmentType: randomEnumValue(EmploymentType),
         workMode: randomEnumValue(WorkMode),
       })
