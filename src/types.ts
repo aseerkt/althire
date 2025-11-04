@@ -5,5 +5,5 @@ export type PaginationParams = { skip?: number; limit?: number }
 export type ActionResponse<T> = {
   type: 'success' | 'error'
   message: string
-  errors?: $ZodFlattenedError<T>
+  errors?: Omit<$ZodFlattenedError<T>, 'formErrors'>
 }

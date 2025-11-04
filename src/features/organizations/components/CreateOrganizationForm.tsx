@@ -1,7 +1,5 @@
 'use client'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
 import { InputField } from '@/components/form/InputField'
 import { SelectField } from '@/components/form/SelectField'
 import { TextAreaField } from '@/components/form/TextAreaField'
@@ -13,22 +11,21 @@ import type {
   OrganizationSize,
   OrganizationType,
 } from '@/generated/prisma'
+import { useZodFormAction } from '@/hooks/use-zod-form-action'
 import { slugify } from '@/lib/utils'
 import { createOrganization } from '../actions'
 import { industryMap, organizationSizeMap } from '../data'
-import {
-  type CreateOrganizationData,
-  createOrganizationSchema,
-} from '../schemas'
+import { createOrganizationSchema } from '../schemas'
 
 export const CreateOrganizationForm = ({
   organizationType,
 }: {
   organizationType: OrganizationType
 }) => {
-  const { control, handleSubmit, watch, setValue, getValues } =
-    useForm<CreateOrganizationData>({
-      resolver: zodResolver(createOrganizationSchema),
+  const { control, isPending, handleSubmitAction, watch, setValue, getValues } =
+    useZodFormAction({
+      schema: createOrganizationSchema,
+      action: createOrganization,
       defaultValues: {
         name: '',
         slug: '',
@@ -42,17 +39,13 @@ export const CreateOrganizationForm = ({
 
   const name = watch('name')
 
-  // auto-fill slug when user types name — but don't overwrite manual edits
+  // auto-fill slug when user types name
   // biome-ignore lint/correctness/useExhaustiveDependencies: a
   useEffect(() => {
     if (getValues().slug !== name) {
       setValue('slug', slugify(name))
     }
   }, [name])
-
-  const onSubmit = async (data: CreateOrganizationData) => {
-    await createOrganization(data)
-  }
 
   return (
     <Card>
@@ -63,7 +56,7 @@ export const CreateOrganizationForm = ({
         <form
           id='create-company-page-form'
           className='flex flex-col gap-5'
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmitAction}
         >
           <InputField
             name='name'
@@ -133,6 +126,7 @@ export const CreateOrganizationForm = ({
         <Button
           type='submit'
           className='ml-auto'
+          disabled={isPending}
           form='create-company-page-form'
         >
           Create
