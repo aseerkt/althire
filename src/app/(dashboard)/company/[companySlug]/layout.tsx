@@ -1,5 +1,6 @@
 import { Building2Icon, SquareArrowOutUpRightIcon } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import { RouteTabs } from '@/components/RoutesTab'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,9 +13,19 @@ import {
 import { industryMap, organizationSizeMap } from '@/features/organizations/data'
 import { getOrganizationBySlug } from '@/features/organizations/server'
 
-export default async function CompanyLayout({
-  children,
+export default async function CompanyLayout(
+  props: LayoutProps<'/company/[companySlug]'>,
+) {
+  return (
+    <Suspense>
+      <SuspendedCompanyLayout {...props} />{' '}
+    </Suspense>
+  )
+}
+
+async function SuspendedCompanyLayout({
   params,
+  children,
 }: LayoutProps<'/company/[companySlug]'>) {
   const { companySlug } = await params
 
