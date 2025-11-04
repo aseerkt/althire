@@ -1,4 +1,6 @@
+import { cacheTag } from 'next/cache'
 import { getCurrentUser } from '@/auth/nextjs/server'
+import { CACHE_KEY } from '@/data/cache'
 import { PER_PAGE } from '@/data/pagination'
 import { prisma } from '@/prisma/client'
 import type { PaginationParams } from '@/types'
@@ -53,15 +55,17 @@ export const getJobApplicants = async (
   })
 }
 
-export const getTotalApplicantsCount = (jobId: string) =>
-  prisma.jobApplication.count({ where: { jobId } })
+export const getTotalApplicantsCount = async (jobId: string) => {
+  'use cache'
+  cacheTag(CACHE_KEY.GET_JOB_APPLICANTS_COUNT(jobId))
+  return prisma.jobApplication.count({ where: { jobId } })
+}
 
-export const getCurrentUserApplication = async (jobId: string) => {
-  const currentUser = await getCurrentUser()
-
-  if (!currentUser) return null
+export const getUserJobApplication = async (userId: string, jobId: string) => {
+  'use cache'
+  cacheTag(CACHE_KEY.GET_USER_JOB_APPLICATION(userId, jobId))
 
   return prisma.jobApplication.findFirst({
-    where: { jobId, userId: currentUser?.id },
+    where: { jobId, userId },
   })
 }

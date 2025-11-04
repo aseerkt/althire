@@ -1,6 +1,7 @@
 import { BuildingIcon } from 'lucide-react'
 import Link from 'next/link'
 import pluralize from 'pluralize'
+import { Suspense } from 'react'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,
@@ -44,7 +45,9 @@ export function JobInfo({
       </CardContent>
       {jobAction && (
         <CardFooter>
-          <CardAction>{jobAction}</CardAction>
+          <CardAction>
+            <Suspense>{jobAction}</Suspense>
+          </CardAction>
         </CardFooter>
       )}
     </Card>

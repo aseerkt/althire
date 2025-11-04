@@ -2,12 +2,15 @@ import { getCurrentUser } from '@/auth/nextjs/server'
 import { MemberRole } from '@/generated/prisma'
 import { prisma } from '@/prisma/client'
 
-export async function hasAdminPrivilege(organizationId: string) {
+export async function hasAdminPrivilege(
+  userId: string,
+  organizationId: string,
+) {
   const currentUser = await getCurrentUser()
 
   if (!currentUser) return false
   const membership = await prisma.organizationMembers.findFirst({
-    where: { organizationId, userId: currentUser.id },
+    where: { organizationId, userId },
     select: { role: true },
   })
 

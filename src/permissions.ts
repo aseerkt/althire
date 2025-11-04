@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { getCurrentUser } from './auth/nextjs/server'
 import { MemberRole } from './generated/prisma'
 import { prisma } from './prisma/client'
@@ -6,13 +7,13 @@ export const requireAuth = async () => {
   const currentUser = await getCurrentUser()
 
   if (currentUser === null) {
-    throw new Error('Unauthorized')
+    redirect('/sign-in')
   }
 
   return currentUser
 }
 
-export async function requiredAdminPrivilege(
+export async function requireAdminPrivilege(
   userId: string,
   organizationId: string,
 ) {

@@ -12,13 +12,15 @@ import {
 import { ApplyJobButton } from '@/features/jobs/components/ApplyJobButton'
 import { JobInfo } from '@/features/jobs/components/JobInfo'
 import {
-  getCurrentUserApplication,
   getJobById,
   getTotalApplicantsCount,
+  getUserJobApplication,
 } from '@/features/jobs/server'
 import { hasAdminPrivilege } from '@/features/organizations/permissions'
+import { requireAuth } from '@/permissions'
 
 export default async function JobPage({ params }: PageProps<'/jobs/[jobId]'>) {
+  const currentUser = await requireAuth()
   const { jobId } = await params
 
   const job = await getJobById(jobId)
@@ -29,7 +31,7 @@ export default async function JobPage({ params }: PageProps<'/jobs/[jobId]'>) {
 
   const totalJobApplicantsCount = await getTotalApplicantsCount(jobId)
 
-  const isAdmin = await hasAdminPrivilege(job.organizationId)
+  const isAdmin = await hasAdminPrivilege(currentUser.id, job.organizationId)
 
   let jobAction: React.JSX.Element | null
 
@@ -41,7 +43,10 @@ export default async function JobPage({ params }: PageProps<'/jobs/[jobId]'>) {
         </Button>
       )
   } else {
-    const currentUserApplication = await getCurrentUserApplication(jobId)
+    const currentUserApplication = await getUserJobApplication(
+      currentUser!.id,
+      jobId,
+    )
 
     jobAction = currentUserApplication ? (
       <Button disabled>Applied</Button>

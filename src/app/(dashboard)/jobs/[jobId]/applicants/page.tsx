@@ -8,11 +8,13 @@ import {
   getTotalApplicantsCount,
 } from '@/features/jobs/server'
 import { hasAdminPrivilege } from '@/features/organizations/permissions'
+import { requireAuth } from '@/permissions'
 
 export default async function CompanyJobApplicantsPage({
   params,
   searchParams,
 }: PageProps<'/jobs/[jobId]/applicants'>) {
+  const currentUser = await requireAuth()
   const { start } = await searchParams
   const { jobId } = await params
 
@@ -24,7 +26,7 @@ export default async function CompanyJobApplicantsPage({
     return notFound()
   }
 
-  const isAdmin = await hasAdminPrivilege(job?.organizationId)
+  const isAdmin = await hasAdminPrivilege(currentUser.id, job.organizationId)
 
   if (!isAdmin) {
     return notFound()

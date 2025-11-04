@@ -1,10 +1,10 @@
+import crypto from 'node:crypto'
+import { z } from 'zod'
 import {
   deleteUserSessionById,
   getUserSessionById,
   setUserSession,
 } from '@/redis'
-import crypto from 'node:crypto'
-import { z } from 'zod'
 
 const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7 // 7 days
 const SESSION_COOKIE_NAME = 'session-id'
@@ -50,8 +50,13 @@ export async function setCookie(sessionId: string, cookies: Cookies) {
   })
 }
 
+export function getSessionCookie(cookies: Cookies) {
+  return cookies.get(SESSION_COOKIE_NAME)
+}
+
 export async function getUserSession(cookies: Cookies) {
-  const sessionCookie = cookies.get(SESSION_COOKIE_NAME)
+  const sessionCookie = getSessionCookie(cookies)
+
   if (!sessionCookie) return null
 
   const sessionData = await getUserSessionById(sessionCookie.value)
