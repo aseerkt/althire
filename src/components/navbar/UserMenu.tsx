@@ -1,3 +1,6 @@
+import { UserIcon } from 'lucide-react'
+import Link from 'next/link'
+import { LogoutButton } from '@/auth/nextjs/components/LogoutButton'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -8,8 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { UserIcon } from 'lucide-react'
-import Link from 'next/link'
 
 export function UserMenu({ username }: { username: string }) {
   return (
@@ -28,7 +29,9 @@ export function UserMenu({ username }: { username: string }) {
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Log out</DropdownMenuItem>
+        <LogoutButton asChild>
+          <DropdownMenuItem>Log out</DropdownMenuItem>
+        </LogoutButton>
       </DropdownMenuContent>
     </DropdownMenu>
   )

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Ubuntu } from 'next/font/google'
 import './globals.css'
 import { AlertDialogProvider } from '@/components/AlertDialogProvider'
+import { Toaster } from '@/components/ui/sonner'
 
 const ubuntu = Ubuntu({
   variable: '--font-ubuntu',
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className={`${ubuntu.variable} antialiased dark`}>
         {children}
         <AlertDialogProvider />
+        <Toaster />
       </body>
     </html>
   )

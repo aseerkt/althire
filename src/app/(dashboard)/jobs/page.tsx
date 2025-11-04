@@ -6,7 +6,7 @@ export default async function JobsPage({ searchParams }: PageProps<'/jobs'>) {
   const { start } = await searchParams
 
   const skip = Number(start) || 0
-  const jobs = await getAllJobs({ skip })
+  const jobs = await getAllJobs({}, { skip })
 
   const totalJobCount = await getAllJobsCount()
 

@@ -1,8 +1,9 @@
 'use server'
 
-import { prisma } from '@/prisma/client'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { createZodAction } from '@/lib/utils'
+import { prisma } from '@/prisma/client'
 import {
   generateSalt,
   hashPassword,
@@ -13,23 +14,19 @@ import {
   removeUserFromSession,
   sessionSchema,
 } from '../core/session'
-import {
-  type SignInData,
-  type SignUpData,
-  signInSchema,
-  signUpSchema,
-} from './schema'
+import { signInSchema, signUpSchema } from './schema'
 
-export const signUp = async (unsafeData: SignUpData) => {
-  const { success, data } = signUpSchema.safeParse(unsafeData)
-
-  if (!success) return 'Unable to create account'
-
+export const signUp = createZodAction(signUpSchema, async (data) => {
   const existingUser = await prisma.user.findUnique({
     where: { email: data.email },
   })
 
-  if (existingUser) return 'User with this email already exists'
+  if (existingUser) {
+    return {
+      type: 'error',
+      message: 'Username or email already taken',
+    }
+  }
 
   const salt = generateSalt(12)
   const hashedPassword = await hashPassword(data.password, salt)
@@ -45,31 +42,30 @@ export const signUp = async (unsafeData: SignUpData) => {
   })
 
   await createUserSession(sessionSchema.parse(newUser), await cookies())
-
   redirect('/')
-}
+})
 
-export const signIn = async (unsafeData: SignInData) => {
-  const { success, data } = signInSchema.safeParse(unsafeData)
-
-  if (!success) return 'Invalid email or password'
-
+export const signIn = createZodAction(signInSchema, async (data) => {
   const existingUser = await prisma.user.findUnique({
     where: { email: data.email },
   })
-  if (!existingUser) return 'Invalid email or password'
+  if (!existingUser) {
+    return { type: 'error', message: 'Invalid email or password' }
+  }
 
   const isPasswordValid = await verifyPassword(
     data.password,
     existingUser.salt,
     existingUser.password,
   )
-  if (!isPasswordValid) return 'Invalid email or password'
+  if (!isPasswordValid) {
+    return { type: 'error', message: 'Invalid email or password' }
+  }
 
   await createUserSession(sessionSchema.parse(existingUser), await cookies())
 
   redirect('/')
-}
+})
 
 export const signOut = async () => {
   await removeUserFromSession(await cookies())

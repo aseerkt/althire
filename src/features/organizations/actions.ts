@@ -1,22 +1,30 @@
 'use server'
 
+import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/auth/nextjs/server'
 import { MemberRole } from '@/generated/prisma'
+import { createZodAction } from '@/lib/utils'
 import { prisma } from '@/prisma/client'
-import { redirect } from 'next/navigation'
-import type { CreateOrganizationData } from './schemas'
+import { createOrganizationSchema } from './schemas'
 
-export async function createOrganization(data: CreateOrganizationData) {
-  const currentUser = await getCurrentUser()
-  const company = await prisma.organization.create({
-    data,
-  })
-  await prisma.organizationMembers.create({
-    data: {
-      organizationId: company.id,
-      userId: currentUser!.id,
-      role: MemberRole.EMPLOYER,
-    },
-  })
-  redirect(`/company/${company.slug}`)
-}
+export const createOrganization = createZodAction(
+  createOrganizationSchema,
+  async (data) => {
+    const currentUser = await getCurrentUser()
+
+    const company = await prisma.$transaction(async (tx) => {
+      const company = await tx.organization.create({
+        data,
+      })
+      await tx.organizationMembers.create({
+        data: {
+          organizationId: company.id,
+          userId: currentUser!.id,
+          role: MemberRole.EMPLOYER,
+        },
+      })
+      return company
+    })
+    redirect(`/company/${company.slug}`)
+  },
+)

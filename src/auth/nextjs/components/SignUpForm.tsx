@@ -1,18 +1,20 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { InputField } from '@/components/form/InputField'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { useZodFormAction } from '@/hooks/use-zod-form-action'
 import { signUp } from '../actions'
-import { type SignUpData, signUpSchema } from '../schema'
+import { signUpSchema } from '../schema'
 
 export const SignUpForm = () => {
-  const [error, setError] = useState<string>()
-  const { control, handleSubmit } = useForm<SignUpData>({
-    resolver: zodResolver(signUpSchema),
+  const {
+    isPending,
+    control,
+    handleSubmitAction: handleSignUp,
+  } = useZodFormAction({
+    schema: signUpSchema,
+    action: signUp,
     defaultValues: {
       name: '',
       email: '',
@@ -22,20 +24,14 @@ export const SignUpForm = () => {
     },
   })
 
-  const onSubmit = async (data: SignUpData) => {
-    const errorMessage = await signUp(data)
-    setError(errorMessage)
-  }
-
   return (
     <Card>
       <CardHeader className='text-2xl font-semibold'>Sign Up</CardHeader>
       <CardContent>
-        {error && <p className='text-destructive'>{error}</p>}
         <form
           id='signup-form'
           className='flex flex-col gap-5'
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSignUp}
         >
           <InputField
             name='username'
@@ -69,7 +65,12 @@ export const SignUpForm = () => {
         </form>
       </CardContent>
       <CardFooter>
-        <Button type='submit' className='ml-auto' form='signup-form'>
+        <Button
+          type='submit'
+          disabled={isPending}
+          className='ml-auto'
+          form='signup-form'
+        >
           Sign up
         </Button>
       </CardFooter>

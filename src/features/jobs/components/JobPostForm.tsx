@@ -6,28 +6,28 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { NativeSelectOption } from '@/components/ui/native-select'
 import { type Organization, WorkMode } from '@/generated/prisma'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useZodFormAction } from '@/hooks/use-zod-form-action'
 import { createJobPost } from '../actions'
-import { type CreateJobPostData, createPostJobSchema } from '../schemas'
+import { createPostJobSchema } from '../schemas'
 
 type PostJobFormProps = {
   companies: Organization[]
 }
 
 export function PostJobForm({ companies }: PostJobFormProps) {
-  const { control, handleSubmit } = useForm<CreateJobPostData>({
-    resolver: zodResolver(createPostJobSchema),
+  const {
+    isPending,
+    control,
+    handleSubmitAction: handleCreateJobPost,
+  } = useZodFormAction({
+    schema: createPostJobSchema,
+    action: createJobPost,
     defaultValues: {
       title: '',
       description: '',
       workMode: WorkMode.ONSITE,
       organizationId: companies[0].id,
     },
-  })
-
-  const onSubmit = handleSubmit(async (data) => {
-    await createJobPost(data)
   })
 
   return (
@@ -37,7 +37,7 @@ export function PostJobForm({ companies }: PostJobFormProps) {
         <form
           id='create-job-post-form'
           className='flex flex-col gap-5'
-          onSubmit={onSubmit}
+          onSubmit={handleCreateJobPost}
         >
           <InputField
             name='title'
@@ -80,7 +80,12 @@ export function PostJobForm({ companies }: PostJobFormProps) {
         </form>
       </CardContent>
       <CardFooter>
-        <Button type='submit' className='ml-auto' form='create-job-post-form'>
+        <Button
+          disabled={isPending}
+          type='submit'
+          className='ml-auto'
+          form='create-job-post-form'
+        >
           Post
         </Button>
       </CardFooter>

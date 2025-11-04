@@ -1,16 +1,16 @@
 import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-} from '@/components/ui/field'
-import {
   type Control,
   Controller,
   type FieldValues,
   type Path,
 } from 'react-hook-form'
-import { NativeSelect } from '../ui/native-select'
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from '@/components/ui/field'
+import { NativeSelect, NativeSelectOption } from '../ui/native-select'
 
 interface SelectFieldProps<TFieldValues extends FieldValues>
   extends React.SelectHTMLAttributes<HTMLSelectElement> {
@@ -18,6 +18,7 @@ interface SelectFieldProps<TFieldValues extends FieldValues>
   control: Control<TFieldValues>
   label?: React.ReactNode
   description?: React.ReactNode
+  placeholder?: React.ReactNode
 }
 
 export const SelectField = <TFieldValues extends FieldValues>({
@@ -25,6 +26,8 @@ export const SelectField = <TFieldValues extends FieldValues>({
   control,
   label,
   description,
+  placeholder,
+  children,
   ...props
 }: SelectFieldProps<TFieldValues>) => {
   return (
@@ -39,7 +42,12 @@ export const SelectField = <TFieldValues extends FieldValues>({
             {...props}
             id={field.name}
             aria-invalid={fieldState.invalid}
-          />
+          >
+            {placeholder && (
+              <NativeSelectOption value=''>{placeholder}</NativeSelectOption>
+            )}
+            {children}
+          </NativeSelect>
           {description && <FieldDescription>{description}</FieldDescription>}
           {fieldState.invalid && fieldState.error && (
             <FieldError errors={[fieldState.error]} />

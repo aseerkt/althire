@@ -1,17 +1,24 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { getCurrentUser } from '@/auth/nextjs/server'
+import { createZodAction } from '@/lib/utils'
+import { requireAuth, requiredAdminPrivilege } from '@/permissions'
 import { prisma } from '@/prisma/client'
-import type { CreateJobPostData } from './schemas'
+import { createPostJobSchema } from './schemas'
 
-export const createJobPost = async (data: CreateJobPostData) => {
-  const job = await prisma.job.create({ data })
-  return redirect(`/jobs/${job.id}`)
-}
+export const createJobPost = createZodAction(
+  createPostJobSchema,
+  async (data) => {
+    const currentUser = await requireAuth()
+    await requiredAdminPrivilege(currentUser.id, data.organizationId)
+
+    const job = await prisma.job.create({ data })
+    redirect(`/jobs/${job.id}`)
+  },
+)
 
 export const applyForJob = async (jobId: string) => {
-  const currentUser = await getCurrentUser()
+  const currentUser = await requireAuth()
   await prisma.jobApplication.create({
     data: { jobId, userId: currentUser!.id },
   })

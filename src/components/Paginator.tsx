@@ -42,8 +42,6 @@ export function Paginator({
   const currentPage = Math.floor(skip / perPage) + 1
   const totalPages = Math.ceil(totalCount / perPage)
 
-  console.log('currentPage', currentPage)
-
   const getPageHref = (page: number) => {
     const params = new URLSearchParams(searchParams.toString())
     params.set('start', ((page - 1) * perPage).toString())

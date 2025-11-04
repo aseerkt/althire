@@ -1,19 +1,22 @@
 import { BuildingIcon } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { ApplyJobButton } from '@/features/jobs/components/ApplyJobButton'
-import { getJobById } from '@/features/jobs/server'
+import { JobInfo } from '@/features/jobs/components/JobInfo'
+import {
+  getCurrentUserApplication,
+  getJobById,
+  getTotalApplicantsCount,
+} from '@/features/jobs/server'
+import { hasAdminPrivilege } from '@/features/organizations/permissions'
 
 export default async function JobPage({ params }: PageProps<'/jobs/[jobId]'>) {
   const { jobId } = await params
@@ -24,34 +27,43 @@ export default async function JobPage({ params }: PageProps<'/jobs/[jobId]'>) {
     return notFound()
   }
 
+  const totalJobApplicantsCount = await getTotalApplicantsCount(jobId)
+
+  const isAdmin = await hasAdminPrivilege(job.organizationId)
+
+  let jobAction: React.JSX.Element | null
+
+  if (isAdmin) {
+    jobAction =
+      totalJobApplicantsCount === 0 ? null : (
+        <Button asChild>
+          <Link href={`/jobs/${job.id}/applicants`}>See applicants</Link>
+        </Button>
+      )
+  } else {
+    const currentUserApplication = await getCurrentUserApplication(jobId)
+
+    jobAction = currentUserApplication ? (
+      <Button disabled>Applied</Button>
+    ) : (
+      <ApplyJobButton
+        jobId={job.id}
+        jobTitle={job.title}
+        companyName={job.organization.name}
+      />
+    )
+  }
+
   return (
     <div className='flex flex-col gap-6'>
+      <JobInfo
+        job={job}
+        totalJobApplicantsCount={totalJobApplicantsCount}
+        jobAction={jobAction}
+      />
       <Card>
         <CardHeader>
-          <div className='flex gap-2 items-center'>
-            <BuildingIcon />
-            <Link href={`/company/${job.organization.slug}`}>
-              {job.organization.name}
-            </Link>
-          </div>
-          <CardTitle className='text-2xl'>{job.title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Badge variant='outline'>{job.workMode}</Badge>
-        </CardContent>
-        <CardFooter>
-          <CardAction>
-            <ApplyJobButton
-              jobId={job.id}
-              jobTitle={job.title}
-              companyName={job.organization.name}
-            />
-          </CardAction>
-        </CardFooter>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>About this job</CardTitle>
+          <CardTitle>About the job</CardTitle>
         </CardHeader>
         <CardContent>
           <CardDescription>{job.description}</CardDescription>

@@ -1,7 +1,7 @@
-import { Card } from '@/components/ui/card'
-import { getOrganizationBySlug } from '@/features/organizations/server'
-import { Building2Icon } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { industryMap, organizationSizeMap } from '@/features/organizations/data'
+import { getOrganizationBySlug } from '@/features/organizations/server'
 
 export default async function CompanyPage({
   params,
@@ -15,26 +15,33 @@ export default async function CompanyPage({
   }
 
   return (
-    <Card className='pt-0 overflow-hidden'>
-      <div className='h-24 bg-primary'></div>
-      <div className='px-6 -mt-24'>
-        <div className='flex items-center justify-center h-28 w-28 rounded-full ring-3 ring-primary-foreground mb-6 bg-background'>
-          <Building2Icon className='h-20 w-20 text-primary' />
-        </div>
-        <div>
-          <h1 className='text-2xl font-bold'>{company.name}</h1>
+    <Card>
+      <CardHeader>
+        <CardTitle className='text-xl -mb-4'>Overview</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className='text-muted-foreground'>{company.description}</p>
+        <div className='flex flex-col mt-4 gap-2'>
           {company.website && (
-            <a
-              className='text-primary'
-              href={company.website}
-              target='_blank'
-              rel='noreferrer'
-            >
-              {company.website}
-            </a>
+            <div className='flex flex-col'>
+              <b>Website</b>
+              <a href={company.website}>{company.website}</a>
+            </div>
           )}
+          <div>
+            <b>Industry</b>
+            <p className='text-muted-foreground'>
+              {industryMap[company.industry]}
+            </p>
+          </div>
+          <div>
+            <b>Company size</b>
+            <p className='text-muted-foreground'>
+              {organizationSizeMap[company.size]}
+            </p>
+          </div>
         </div>
-      </div>
+      </CardContent>
     </Card>
   )
 }
