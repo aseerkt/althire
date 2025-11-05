@@ -51,7 +51,7 @@ export function formatDate(date: string | Date): string {
 }
 
 export function setZodFormError<TFieldValues extends FieldValues>(
-  errors: $ZodFlattenedError<TFieldValues>,
+  errors: Omit<$ZodFlattenedError<TFieldValues>, 'formErrors'>,
   setError: UseFormSetError<TFieldValues>,
 ) {
   Object.entries(errors.fieldErrors).forEach(([key, messages]) => {
@@ -81,21 +81,7 @@ export function createZodAction<TSchema extends z.ZodObject<z.ZodRawShape>>(
         errors: z.flattenError(parsed.error),
       }
     }
-    try {
-      const res = await fn(parsed.data)
-      return res
-    } catch (err) {
-      if (
-        err instanceof Error &&
-        'digest' in err &&
-        err.digest === 'NEXT_REDIRECT'
-      ) {
-        throw err
-      }
-      return {
-        type: 'error',
-        message: 'Something went wrong',
-      }
-    }
+
+    return fn(parsed.data)
   }
 }

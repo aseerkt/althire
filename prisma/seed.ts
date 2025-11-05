@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { hashPassword } from '@/auth/core/passwordHasher'
+import { testUsers } from '@/data/test-users'
 import {
   EmploymentType,
   Industry,
@@ -34,16 +35,26 @@ function randomEnumValue<T extends object>(enumObj: T): T[keyof T] {
 
 async function main() {
   console.log('Seeding users...')
+
+  const hashedTestUsers = await Promise.all(
+    testUsers.map(async (user) => ({
+      ...user,
+      password: await hashPassword(user.password, user.salt),
+    })),
+  )
   const password = await hashPassword(USER_PASSWORD, USER_SALT)
   const users = await prisma.user.createManyAndReturn({
-    data: new Array(USER_COUNT).fill(0).map<Prisma.UserCreateManyInput>(() => ({
-      email: faker.internet.email(),
-      name: faker.person.fullName(),
-      username: faker.internet.username(),
-      headline: faker.person.jobTitle(),
-      password: password,
-      salt: USER_SALT,
-    })),
+    data: new Array(USER_COUNT)
+      .fill(0)
+      .map<Prisma.UserCreateManyInput>(() => ({
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        username: faker.internet.username(),
+        headline: faker.person.jobTitle(),
+        password: password,
+        salt: USER_SALT,
+      }))
+      .concat(hashedTestUsers),
   })
 
   console.log('Seeding companies...')

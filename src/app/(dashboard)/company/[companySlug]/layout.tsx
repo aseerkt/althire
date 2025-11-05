@@ -18,7 +18,7 @@ export default async function CompanyLayout(
 ) {
   return (
     <Suspense>
-      <SuspendedCompanyLayout {...props} />{' '}
+      <SuspendedCompanyLayout {...props} />
     </Suspense>
   )
 }

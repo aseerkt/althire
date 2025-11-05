@@ -3,9 +3,11 @@
 import { InputField } from '@/components/form/InputField'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import { useZodFormAction } from '@/hooks/use-zod-form-action'
 import { signUp } from '../actions'
 import { signUpSchema } from '../schema'
+import { SignInLink } from './AuthButtons'
 
 export const SignUpForm = () => {
   const {
@@ -64,7 +66,7 @@ export const SignUpForm = () => {
           />
         </form>
       </CardContent>
-      <CardFooter>
+      <CardFooter className='flex flex-col gap-2'>
         <Button
           type='submit'
           disabled={isPending}
@@ -73,6 +75,10 @@ export const SignUpForm = () => {
         >
           Sign up
         </Button>
+        <Separator />
+        <div>
+          Already have an account? <SignInLink>Sign in</SignInLink>
+        </div>
       </CardFooter>
     </Card>
   )

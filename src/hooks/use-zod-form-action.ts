@@ -34,23 +34,10 @@ export function useZodFormAction<T extends z.ZodObject<z.ZodRawShape>>({
 
   const handleSubmitAction = handleSubmit((data) => {
     startTransition(async () => {
-      try {
-        const res = await action(data)
+      const res = await action(data)
 
-        if (res.message) toast.error(res.message)
-        if (res.errors) setZodFormError(res.errors, setError)
-      } catch (error) {
-        // ✅ correct way to detect redirect errors
-        if (
-          error instanceof Error &&
-          'digest' in error &&
-          error.digest === 'NEXT_REDIRECT'
-        ) {
-          throw error // let Next.js handle redirect
-        }
-
-        toast.error('Something went wrong')
-      }
+      if (res.message) toast.error(res.message)
+      if (res.errors) setZodFormError(res.errors, setError)
     })
   })
 
