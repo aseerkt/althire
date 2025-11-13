@@ -5,6 +5,7 @@ import {
   EmploymentType,
   Industry,
   OrganizationSize,
+  OrganizationType,
   type Prisma,
   PrismaClient,
   WorkMode,
@@ -21,7 +22,7 @@ const USER_PASSWORD = 'test@123'
 const USER_SALT = 'salt'
 
 const USER_COUNT = 50
-const COMPANY_COUNT = 20
+const ORGANIZATION_COUNT = 40
 const JOB_COUNT = 20
 
 // helpers
@@ -57,13 +58,14 @@ async function main() {
       .concat(hashedTestUsers),
   })
 
-  console.log('Seeding companies...')
+  console.log('Seeding organizations...')
 
-  const companies = await prisma.organization.createManyAndReturn({
-    data: new Array(COMPANY_COUNT)
+  const organizations = await prisma.organization.createManyAndReturn({
+    data: new Array(ORGANIZATION_COUNT)
       .fill(0)
       .map<Prisma.OrganizationCreateManyInput>(() => ({
         name: faker.company.name(),
+        type: randomEnumValue(OrganizationType),
         description: faker.lorem.paragraph(5),
         industry: randomEnumValue(Industry),
         size: randomEnumValue(OrganizationSize),
@@ -73,32 +75,31 @@ async function main() {
       })),
   })
 
-  console.log('Seeding company members...')
+  console.log('Seeding organization members...')
 
-  const createCompanyMembersInput: Prisma.OrganizationMembersCreateManyInput[] =
-    []
+  const createOrgMembersInput: Prisma.OrganizationMembersCreateManyInput[] = []
 
-  for (let i = 0; i < companies.length; i++) {
+  for (let i = 0; i < organizations.length; i++) {
     for (let j = 0; j < users.length; j++) {
-      createCompanyMembersInput.push({
-        organizationId: companies[i].id,
+      createOrgMembersInput.push({
+        organizationId: organizations[i].id,
         userId: users[j].id,
       })
     }
   }
 
   await prisma.organizationMembers.createMany({
-    data: createCompanyMembersInput,
+    data: createOrgMembersInput,
   })
 
   console.log('Seeding jobs...')
 
   const createManyJobInput: Prisma.JobCreateManyInput[] = []
 
-  for (let i = 0; i < companies.length; i++) {
+  for (let i = 0; i < organizations.length; i++) {
     for (let j = 0; j < JOB_COUNT; j++) {
       createManyJobInput.push({
-        organizationId: companies[i].id,
+        organizationId: organizations[i].id,
         title: faker.person.jobTitle(),
         description: faker.lorem.paragraph(10),
         employmentType: randomEnumValue(EmploymentType),
