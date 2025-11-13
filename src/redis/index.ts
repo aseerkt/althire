@@ -2,7 +2,11 @@ import Redis from 'ioredis'
 import type { UserSession } from '@/auth/core/session'
 import { env } from '@/data/env'
 
+// Redis client
+
 export const redis = new Redis(env.REDIS_PORT, env.REDIS_HOST)
+
+// Redis functions
 
 export const setUserSession = (
   sessionId: string,

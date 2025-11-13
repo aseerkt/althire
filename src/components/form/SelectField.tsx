@@ -34,6 +34,7 @@ export const SelectField = <TFieldValues extends FieldValues>({
     <Controller
       name={name}
       control={control}
+      defaultValue={'' as any}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           {label && <FieldLabel htmlFor={field.name}>{label}</FieldLabel>}
@@ -44,7 +45,9 @@ export const SelectField = <TFieldValues extends FieldValues>({
             aria-invalid={fieldState.invalid}
           >
             {placeholder && (
-              <NativeSelectOption value=''>{placeholder}</NativeSelectOption>
+              <NativeSelectOption value='' disabled hidden>
+                {placeholder}
+              </NativeSelectOption>
             )}
             {children}
           </NativeSelect>

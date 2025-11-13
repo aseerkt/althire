@@ -1,28 +1,41 @@
 'use client'
-import { useEffect } from 'react'
+import { Building2Icon, BuildingIcon } from 'lucide-react'
+import { useEffect, useEffectEvent } from 'react'
 import { InputField } from '@/components/form/InputField'
 import { SelectField } from '@/components/form/SelectField'
 import { TextAreaField } from '@/components/form/TextAreaField'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Field, FieldLabel } from '@/components/ui/field'
 import { NativeSelectOption } from '@/components/ui/native-select'
-import type {
-  Industry,
-  OrganizationSize,
+import {
+  type Industry,
+  type OrganizationSize,
   OrganizationType,
 } from '@/generated/prisma'
 import { useZodFormAction } from '@/hooks/use-zod-form-action'
-import { slugify } from '@/lib/utils'
+import { cn, slugify } from '@/lib/utils'
 import { createOrganization } from '../actions'
 import { industryMap, organizationSizeMap } from '../data'
 import { createOrganizationSchema } from '../schemas'
 
-export const CreateOrganizationForm = ({
-  organizationType,
-}: {
-  organizationType: OrganizationType
-}) => {
-  const { control, isPending, handleSubmitAction, watch, setValue, getValues } =
+const organizationTypes = [
+  {
+    title: 'Company',
+    subTitle: 'Small, medium and large businesses',
+    icon: BuildingIcon,
+    value: OrganizationType.COMPANY,
+  },
+  {
+    title: 'Educational institution',
+    subTitle: 'Schools and universities',
+    icon: Building2Icon,
+    value: OrganizationType.SCHOOL,
+  },
+]
+
+export const CreateOrganizationForm = () => {
+  const { control, isPending, handleSubmitAction, watch, setValue, register } =
     useZodFormAction({
       schema: createOrganizationSchema,
       action: createOrganization,
@@ -31,26 +44,28 @@ export const CreateOrganizationForm = ({
         slug: '',
         website: '',
         description: '',
-        type: organizationType,
+        type: OrganizationType.COMPANY,
         size: undefined,
         industry: undefined,
       },
     })
 
+  const selectedType = watch('type')
+
   const name = watch('name')
 
-  // auto-fill slug when user types name
-  // biome-ignore lint/correctness/useExhaustiveDependencies: a
+  const slugifyName = useEffectEvent((name: string) => {
+    setValue('slug', slugify(name))
+  })
+
   useEffect(() => {
-    if (getValues().slug !== name) {
-      setValue('slug', slugify(name))
-    }
+    slugifyName(name)
   }, [name])
 
   return (
     <Card>
       <CardHeader className='text-2xl font-semibold'>
-        Create company page
+        Create althire page
       </CardHeader>
       <CardContent>
         <form
@@ -58,21 +73,54 @@ export const CreateOrganizationForm = ({
           className='flex flex-col gap-5'
           onSubmit={handleSubmitAction}
         >
+          <Field>
+            <FieldLabel>Organization type</FieldLabel>
+            <div
+              role='radiogroup'
+              className='grid grid-cols-2 items-center gap-4'
+            >
+              {organizationTypes.map((orgType) => (
+                <label
+                  htmlFor={orgType.value}
+                  key={orgType.value}
+                  className={cn(
+                    'flex bg-accent h-full cursor-pointer hover:shadow-lg flex-col items-center gap-4 p-6 border shadow rounded-md',
+                    selectedType === orgType.value &&
+                      'bg-accent-foreground text-accent',
+                  )}
+                >
+                  <input
+                    type='radio'
+                    value={orgType.value}
+                    {...register('type')}
+                    id={orgType.value}
+                    checked={selectedType === orgType.value}
+                    hidden
+                  />
+                  <div className='flex flex-col text-center items-center'>
+                    <div className='mb-2'>
+                      <orgType.icon className='w-8 h-8' />
+                    </div>
+                    <b>{orgType.title}</b>
+                    <small>{orgType.subTitle}</small>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </Field>
           <InputField
             name='name'
             control={control}
-            label='Company name'
+            label='Name'
             type='text'
-            required
-            placeholder='Add your company name'
+            placeholder="Add your organization's name"
           />
           <InputField
             name='slug'
             control={control}
-            label='althire.com/company/*'
+            label={`althire.com/${selectedType.toLowerCase()}/*`}
             placeholder='Add your unique althire address'
             type='text'
-            required
           />
           <InputField
             name='website'

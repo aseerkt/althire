@@ -1,12 +1,10 @@
-import { getCurrentUser } from '@/auth/nextjs/server'
+import { redirect } from 'next/navigation'
 import { PostJobForm } from '@/features/jobs/components/JobPostForm'
 import { getUserOrganizations } from '@/features/organizations/server'
-import { redirect } from 'next/navigation'
+import { requireAuth } from '@/permissions'
 
 export default async function PostJobPage() {
-  const currentUser = await getCurrentUser()
-
-  if (!currentUser) return null
+  const currentUser = await requireAuth()
 
   const userCompanies = await getUserOrganizations(currentUser.id)
 

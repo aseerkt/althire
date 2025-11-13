@@ -135,9 +135,9 @@ enum JobApplicationStatus {
 }
 
 enum MemberRole {
-  EMPLOYER @map("Employer")
-  ADMIN    @map("Admin")
-  MEMBER   @map("Member")
+  SUPER_ADMIN @map("Super Admin")
+  ADMIN       @map("Admin")
+  MEMBER      @map("Member")
 }
 
 enum OrganizationType {
