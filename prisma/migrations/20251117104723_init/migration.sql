@@ -8,7 +8,7 @@ CREATE TYPE "EmploymentType" AS ENUM ('Full-time', 'Part-time', 'Contract', 'Tem
 CREATE TYPE "JobApplicationStatus" AS ENUM ('Pending', 'Reviewed', 'Accepted', 'Rejected');
 
 -- CreateEnum
-CREATE TYPE "MemberRole" AS ENUM ('Employer', 'Admin', 'Member');
+CREATE TYPE "MemberRole" AS ENUM ('Super Admin', 'Admin', 'Member');
 
 -- CreateEnum
 CREATE TYPE "OrganizationType" AS ENUM ('COMPANY', 'SCHOOL');
@@ -30,6 +30,7 @@ CREATE TABLE "User" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "headline" STRING,
+    "about" STRING,
     "locationId" STRING,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -107,6 +108,45 @@ CREATE TABLE "Location" (
     CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Experience" (
+    "id" STRING NOT NULL,
+    "title" STRING NOT NULL,
+    "organizationName" STRING,
+    "isCurrentlyWorking" BOOL NOT NULL DEFAULT false,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3),
+    "description" STRING,
+    "employmentType" "EmploymentType" NOT NULL,
+    "locationType" "WorkMode" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" STRING NOT NULL,
+    "locationId" STRING,
+    "organizationId" STRING,
+
+    CONSTRAINT "Experience_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Education" (
+    "id" STRING NOT NULL,
+    "schoolName" STRING,
+    "degree" STRING,
+    "fieldOfStudy" STRING,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3),
+    "grade" STRING,
+    "activities" STRING,
+    "description" STRING,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" STRING NOT NULL,
+    "schoolId" STRING,
+
+    CONSTRAINT "Education_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
@@ -145,3 +185,18 @@ ALTER TABLE "JobApplication" ADD CONSTRAINT "JobApplication_userId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "JobApplication" ADD CONSTRAINT "JobApplication_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Experience" ADD CONSTRAINT "Experience_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Experience" ADD CONSTRAINT "Experience_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Experience" ADD CONSTRAINT "Experience_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Education" ADD CONSTRAINT "Education_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Education" ADD CONSTRAINT "Education_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;

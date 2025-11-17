@@ -30,7 +30,9 @@ export function JobInfo({
       <CardHeader>
         <div className='flex gap-2 items-center'>
           <BuildingIcon />
-          <Link href={`/company/${job.organization.slug}`}>
+          <Link
+            href={`/${job.organization.type.toLowerCase()}/${job.organization.slug}`}
+          >
             {job.organization.name}
           </Link>
         </div>

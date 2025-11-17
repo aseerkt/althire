@@ -10,9 +10,9 @@ import {
 import type { Prisma } from '@/generated/prisma'
 import { formatDate } from '@/lib/utils'
 
-type JobWithCompany = Prisma.JobGetPayload<{ include: { organization: true } }>
+type JobWithOrganization = Prisma.JobGetPayload<{ include: { organization: true } }>
 
-export function JobCard({ job }: { job: JobWithCompany }) {
+export function JobCard({ job }: { job: JobWithOrganization }) {
   return (
     <Link href={`/jobs/${job.id}`}>
       <Card className='min-w-[250px] min-h-[250px] h-full hover:shadow-lg'>

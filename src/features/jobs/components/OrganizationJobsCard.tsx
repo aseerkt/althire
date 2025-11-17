@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import type { Organization } from '@/generated/prisma'
 
-export function CompanyJobsCard({
-  company,
+export function OrganizationJobsCard({
+  organization,
   totalJobCount,
 }: {
-  company: Organization
+  organization: Organization
   totalJobCount: number
 }) {
   return (
@@ -16,7 +16,7 @@ export function CompanyJobsCard({
       <CardContent className='flex-1 flex flex-col space-y-4 items-center justify-center'>
         <BriefcaseBusinessIcon className='h-14 w-14' />
         <p className='text-center'>
-          {company.name} has {totalJobCount} posted jobs
+          {organization.name} has {totalJobCount} posted jobs
         </p>
         <Button variant='outline' className='w-max' asChild>
           <Link href='/jobs'>See all jobs</Link>

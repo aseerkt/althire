@@ -1,16 +1,15 @@
 import { cacheTag } from 'next/cache'
-import { getCurrentUser } from '@/auth/nextjs/server'
 import { CACHE_KEY } from '@/data/cache'
 import { PER_PAGE } from '@/data/pagination'
 import { prisma } from '@/prisma/client'
 import type { PaginationParams } from '@/types'
 
 export const getAllJobs = async (
-  { companyId }: { companyId?: string },
+  { organizationId }: { organizationId?: string },
   { skip = 0, limit = PER_PAGE }: PaginationParams,
 ) => {
   return prisma.job.findMany({
-    ...(companyId ? { where: { organizationId: companyId } } : {}),
+    ...(organizationId ? { where: { organizationId } } : {}),
     include: { organization: true },
     skip,
     take: limit,
@@ -18,8 +17,8 @@ export const getAllJobs = async (
 }
 
 export const getAllJobsCount = () => prisma.job.count()
-export const getCompanyJobCount = (companyId: string) =>
-  prisma.job.count({ where: { organizationId: companyId } })
+export const getOrganizationJobCount = (organizationId: string) =>
+  prisma.job.count({ where: { organizationId } })
 
 export const getJobById = (jobId: string) =>
   prisma.job.findUnique({
@@ -27,7 +26,7 @@ export const getJobById = (jobId: string) =>
     include: { organization: true },
   })
 
-export const getCompanyJobs = (
+export const getOrganizationJobs = (
   organizationId: string,
   { skip, limit }: PaginationParams,
 ) => {

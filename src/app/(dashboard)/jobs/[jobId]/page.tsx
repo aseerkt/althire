@@ -54,7 +54,7 @@ export default async function JobPage({ params }: PageProps<'/jobs/[jobId]'>) {
       <ApplyJobButton
         jobId={job.id}
         jobTitle={job.title}
-        companyName={job.organization.name}
+        organizationName={job.organization.name}
       />
     )
   }

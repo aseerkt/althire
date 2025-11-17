@@ -7,15 +7,15 @@ import { applyForJob } from '../actions'
 export const ApplyJobButton = ({
   jobId,
   jobTitle,
-  companyName,
+  organizationName,
 }: {
   jobId: string
   jobTitle: string
-  companyName: string
+  organizationName: string
 }) => {
   const onClick = () => {
     showAlert({
-      title: `Apply to ${companyName}`,
+      title: `Apply to ${organizationName}`,
       description: jobTitle,
       confirmText: 'Apply',
       onConfirm: () => applyForJob(jobId),

@@ -1,26 +1,31 @@
 import { notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { CompanyJobsCard } from '@/features/jobs/components/CompanyJobsCard'
 import { JobCard } from '@/features/jobs/components/JobCard'
-import { getCompanyJobCount, getCompanyJobs } from '@/features/jobs/server'
+import { OrganizationJobsCard } from '@/features/jobs/components/OrganizationJobsCard'
+import {
+  getOrganizationJobCount,
+  getOrganizationJobs,
+} from '@/features/jobs/server'
 import { getOrganizationBySlug } from '@/features/organizations/server'
 
-export default async function CompanyJobsPage({
+export default async function OrganizationJobsPage({
   params,
   searchParams,
-}: PageProps<'/company/[companySlug]/jobs'>) {
-  const { companySlug } = await params
+}: PageProps<'/[orgType]/[orgSlug]/jobs'>) {
+  const { orgSlug } = await params
   const { start } = await searchParams
 
   const skip = Number(start) || 0
 
-  const company = await getOrganizationBySlug(companySlug)
+  const organization = await getOrganizationBySlug(orgSlug)
 
-  if (company == null) {
+  if (organization == null) {
     return notFound()
   }
-  const jobs = await getCompanyJobs(company.id, { skip, limit: 5 })
-  const totalCompanyJobsCount = await getCompanyJobCount(company.id)
+  const jobs = await getOrganizationJobs(organization.id, { skip, limit: 5 })
+  const totalOrganizationJobsCount = await getOrganizationJobCount(
+    organization.id,
+  )
 
   return (
     <Card>
@@ -31,9 +36,9 @@ export default async function CompanyJobsPage({
         {jobs.map((job) => (
           <JobCard key={job.id} job={job} />
         ))}
-        <CompanyJobsCard
-          company={company}
-          totalJobCount={totalCompanyJobsCount}
+        <OrganizationJobsCard
+          organization={organization}
+          totalJobCount={totalOrganizationJobsCount}
         />
       </CardContent>
     </Card>

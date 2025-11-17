@@ -63,16 +63,19 @@ async function main() {
   const organizations = await prisma.organization.createManyAndReturn({
     data: new Array(ORGANIZATION_COUNT)
       .fill(0)
-      .map<Prisma.OrganizationCreateManyInput>(() => ({
-        name: faker.company.name(),
-        type: randomEnumValue(OrganizationType),
-        description: faker.lorem.paragraph(5),
-        industry: randomEnumValue(Industry),
-        size: randomEnumValue(OrganizationSize),
-        slug: slugify(faker.company.name()),
-        tagline: faker.person.jobDescriptor(),
-        website: faker.internet.url(),
-      })),
+      .map<Prisma.OrganizationCreateManyInput>(() => {
+        const organizationName = faker.company.name()
+        return {
+          name: organizationName,
+          type: randomEnumValue(OrganizationType),
+          description: faker.lorem.paragraph(5),
+          industry: randomEnumValue(Industry),
+          size: randomEnumValue(OrganizationSize),
+          slug: slugify(organizationName),
+          tagline: faker.person.jobDescriptor(),
+          website: faker.internet.url(),
+        }
+      }),
   })
 
   console.log('Seeding organization members...')

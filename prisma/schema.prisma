@@ -23,11 +23,14 @@ model User {
   updatedAt DateTime @updatedAt
 
   headline   String?
+  about      String?
   locationId String?
   location   Location? @relation(fields: [locationId], references: [id])
 
   jobApplication      JobApplication[]
   organizationMembers OrganizationMembers[]
+  experiences         Experience[]
+  education           Education[]
 }
 
 model Organization {
@@ -48,6 +51,8 @@ model Organization {
 
   jobs                Job[]
   organizationMembers OrganizationMembers[]
+  experiences         Experience[]
+  education           Education[]
 
   @@index([type])
 }
@@ -108,6 +113,51 @@ model Location {
   users         User[]
   jobs          Job[]
   organizations Organization[]
+  experiences   Experience[]
+}
+
+model Experience {
+  id                 String         @id @default(uuid())
+  title              String
+  organizationName   String?
+  isCurrentlyWorking Boolean        @default(false)
+  startDate          DateTime
+  endDate            DateTime?
+  description        String?
+  employmentType     EmploymentType
+  locationType       WorkMode
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId         String
+  locationId     String?
+  organizationId String?
+
+  user         User          @relation(fields: [userId], references: [id])
+  location     Location?     @relation(fields: [locationId], references: [id])
+  organization Organization? @relation(fields: [organizationId], references: [id])
+}
+
+model Education {
+  id           String    @id @default(uuid())
+  schoolName   String?
+  degree       String?
+  fieldOfStudy String?
+  startDate    DateTime
+  endDate      DateTime?
+  grade        String?
+  activities   String?
+  description  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId   String
+  schoolId String?
+
+  user   User          @relation(fields: [userId], references: [id])
+  school Organization? @relation(fields: [schoolId], references: [id])
 }
 
 // Enums

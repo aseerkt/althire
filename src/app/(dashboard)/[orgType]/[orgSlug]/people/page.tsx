@@ -14,23 +14,23 @@ import {
 } from '@/features/organizations/server'
 import { UserCard } from '@/features/users/components/UserCard'
 
-export default async function CompanyPeoplePage({
+export default async function OrganizationPeoplePage({
   params,
   searchParams,
-}: PageProps<'/company/[companySlug]/people'>) {
-  const { companySlug } = await params
+}: PageProps<'/[orgType]/[orgSlug]/people'>) {
+  const { orgSlug } = await params
   const { start } = await searchParams
 
   const skip = Number(start) || 0
 
-  const company = await getOrganizationBySlug(companySlug)
+  const organization = await getOrganizationBySlug(orgSlug)
 
-  if (company == null) {
+  if (organization == null) {
     return notFound()
   }
-  const members = await getOrganizationMembers(company.id, { skip })
+  const members = await getOrganizationMembers(organization.id, { skip })
   const totalOrganizationMembersCount = await getOrganizationMembersCount(
-    company.id,
+    organization.id,
   )
 
   return (

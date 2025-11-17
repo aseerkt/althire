@@ -11,10 +11,10 @@ import { createJobPost } from '../actions'
 import { createPostJobSchema } from '../schemas'
 
 type PostJobFormProps = {
-  companies: Organization[]
+  organizations: Organization[]
 }
 
-export function PostJobForm({ companies }: PostJobFormProps) {
+export function PostJobForm({ organizations }: PostJobFormProps) {
   const {
     isPending,
     control,
@@ -26,7 +26,7 @@ export function PostJobForm({ companies }: PostJobFormProps) {
       title: '',
       description: '',
       workMode: WorkMode.ONSITE,
-      organizationId: companies[0].id,
+      organizationId: organizations[0].id,
     },
   })
 
@@ -49,12 +49,12 @@ export function PostJobForm({ companies }: PostJobFormProps) {
           <SelectField
             name='organizationId'
             control={control}
-            label='Company'
+            label='Organization'
             required
           >
-            {companies.map((company) => (
-              <NativeSelectOption key={company.id} value={company.id}>
-                {company.name}
+            {organizations.map((organization) => (
+              <NativeSelectOption key={organization.id} value={organization.id}>
+                {organization.name}
               </NativeSelectOption>
             ))}
           </SelectField>

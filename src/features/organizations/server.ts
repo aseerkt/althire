@@ -1,6 +1,5 @@
 import { getCurrentUser } from '@/auth/nextjs/server'
 import { PER_PAGE } from '@/data/pagination'
-import { OrganizationType } from '@/generated/prisma'
 import { prisma } from '@/prisma/client'
 import type { PaginationParams } from '@/types'
 
@@ -8,12 +7,9 @@ export const getOrganizationBySlug = async (slug: string) => {
   return await prisma.organization.findUnique({ where: { slug } })
 }
 
-export const getUserOrganizations = async (
-  userId: string,
-  orgType = OrganizationType.COMPANY,
-) => {
+export const getUserOrganizations = async (userId: string) => {
   const organizations = await prisma.organization.findMany({
-    where: { type: orgType, organizationMembers: { some: { userId } } },
+    where: { organizationMembers: { some: { userId } } },
     include: {
       organizationMembers: { where: { userId }, select: { id: true } },
     },
