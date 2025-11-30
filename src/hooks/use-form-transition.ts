@@ -1,7 +1,7 @@
 import { useTransition } from 'react'
 import type { FieldValues, UseFormSetError } from 'react-hook-form'
 import { toast } from 'sonner'
-import { setZodFormError } from '@/lib/utils'
+import { setZodFormError } from '@/lib/form'
 import type { ActionResponse } from '@/types'
 
 export function useFormTransition() {

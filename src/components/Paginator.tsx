@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname, useSearchParams } from 'next/navigation'
-import { PER_PAGE } from '@/data/pagination'
+import { PER_PAGE } from '@/data/common'
 import {
   Pagination,
   PaginationContent,

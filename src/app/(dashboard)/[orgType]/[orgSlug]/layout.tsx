@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import OrganizationInfo from '@/features/organizations/components/OrganizationInfo'
 import { getOrganizationBySlug } from '@/features/organizations/server'
-import { OrganizationType } from '@/generated/prisma'
+import { OrganizationType } from '@/generated/prisma/enums'
 
 export default async function OrganizationLayout(
   props: LayoutProps<'/[orgType]/[orgSlug]'>,

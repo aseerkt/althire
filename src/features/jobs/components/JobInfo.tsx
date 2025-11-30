@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { Job, Organization } from '@/generated/prisma'
+import type { Job, Organization } from '@/generated/prisma/browser'
 import { formatDate } from '@/lib/utils'
 
 type JobInfoProps = {

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { Organization } from '@/generated/prisma'
+import type { Organization } from '@/generated/prisma/browser'
 import { industryMap, organizationSizeMap } from '../data'
 
 export default function OrganizationAbout({

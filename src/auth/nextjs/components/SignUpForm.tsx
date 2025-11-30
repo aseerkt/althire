@@ -12,7 +12,7 @@ import { SignInLink } from './AuthButtons'
 export const SignUpForm = () => {
   const {
     isPending,
-    control,
+    form,
     handleSubmitAction: handleSignUp,
   } = useZodFormAction({
     schema: signUpSchema,
@@ -37,29 +37,34 @@ export const SignUpForm = () => {
         >
           <InputField
             name='username'
-            control={control}
+            control={form.control}
             label='Username'
             type='text'
             required
           />
           <InputField
             name='email'
-            control={control}
+            control={form.control}
             label='Email'
             type='email'
             required
           />
-          <InputField name='name' control={control} label='Name' required />
+          <InputField
+            name='name'
+            control={form.control}
+            label='Name'
+            required
+          />
           <InputField
             name='password'
-            control={control}
+            control={form.control}
             label='Password'
             type='password'
             required
           />
           <InputField
             name='confirmPassword'
-            control={control}
+            control={form.control}
             label='Confirm Password'
             type='password'
             required

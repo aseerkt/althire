@@ -3,10 +3,10 @@ import {
   Industry,
   OrganizationSize,
   OrganizationType,
-} from '@/generated/prisma'
+} from '@/generated/prisma/enums'
 
 export const createOrganizationSchema = z.object({
-  name: z.string().min(3, 'Name must be at least 3 characters'),
+  name: z.string().trim().min(3, 'Name must be at least 3 characters'),
   slug: z
     .string()
     .trim()
@@ -18,7 +18,8 @@ export const createOrganizationSchema = z.object({
   website: z.httpUrl('Invalid URL').optional(),
   description: z
     .string()
-    .min(10, 'Description must be at least 10 characters')
+    .trim()
+    .min(20, 'Description must be at least 20 characters')
     .optional(),
   type: z.enum(OrganizationType, 'Please select an organization type'),
   industry: z.enum(Industry, { error: 'Please select an industry' }),

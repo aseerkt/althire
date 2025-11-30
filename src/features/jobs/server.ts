@@ -1,6 +1,6 @@
 import { cacheTag } from 'next/cache'
 import { CACHE_KEY } from '@/data/cache'
-import { PER_PAGE } from '@/data/pagination'
+import { PER_PAGE } from '@/data/common'
 import { prisma } from '@/prisma/client'
 import type { PaginationParams } from '@/types'
 

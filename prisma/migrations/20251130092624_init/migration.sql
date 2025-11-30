@@ -1,23 +1,23 @@
 -- CreateEnum
-CREATE TYPE "WorkMode" AS ENUM ('Remote', 'On-site', 'Hybrid');
+CREATE TYPE "WorkMode" AS ENUM ('REMOTE', 'ONSITE', 'HYBRID');
 
 -- CreateEnum
-CREATE TYPE "EmploymentType" AS ENUM ('Full-time', 'Part-time', 'Contract', 'Temporary', 'Volunteer', 'Internship');
+CREATE TYPE "EmploymentType" AS ENUM ('FULL_TIME', 'PART_TIME', 'CONTRACT', 'TEMPORARY', 'VOLUNTEER', 'INTERNSHIP');
 
 -- CreateEnum
-CREATE TYPE "JobApplicationStatus" AS ENUM ('Pending', 'Reviewed', 'Accepted', 'Rejected');
+CREATE TYPE "JobApplicationStatus" AS ENUM ('PENDING', 'REVIEWED', 'ACCEPTED', 'REJECTED');
 
 -- CreateEnum
-CREATE TYPE "MemberRole" AS ENUM ('Super Admin', 'Admin', 'Member');
+CREATE TYPE "MemberRole" AS ENUM ('SUPER_ADMIN', 'ADMIN', 'MEMBER');
 
 -- CreateEnum
 CREATE TYPE "OrganizationType" AS ENUM ('COMPANY', 'SCHOOL');
 
 -- CreateEnum
-CREATE TYPE "Industry" AS ENUM ('Accounting', 'Advertising', 'Agriculture', 'Airlines & Aviation', 'Apparel & Fashion', 'Architecture & Planning', 'Automotive', 'Banking', 'Biotechnology', 'Broadcast Media', 'Chemicals', 'Civil Engineering', 'Computer Hardware', 'Computer Software', 'Construction', 'Consulting', 'Consumer Electronics', 'Consumer Goods', 'Education', 'Electrical/Electronic Manufacturing', 'Energy', 'Entertainment', 'Environmental Services', 'Financial Services', 'Food & Beverages', 'Government Administration', 'Healthcare', 'Hospitality', 'Human Resources', 'Industrial Automation', 'Information Services', 'Information Technology', 'Insurance', 'Internet', 'Investment Banking', 'Law Practice', 'Legal Services', 'Logistics & Supply Chain', 'Manufacturing', 'Marketing', 'Media', 'Medical Devices', 'Mining & Metals', 'Nonprofit Organization Management', 'Oil & Energy', 'Pharmaceuticals', 'Public Relations & Communications', 'Real Estate', 'Research', 'Restaurants', 'Retail', 'Sports', 'Telecommunications', 'Transportation', 'Utilities', 'Venture Capital & Private Equity', 'Wholesale');
+CREATE TYPE "Industry" AS ENUM ('ACCOUNTING', 'ADVERTISING', 'AGRICULTURE', 'AIRLINES_AVIATION', 'APPAREL_FASHION', 'ARCHITECTURE_PLANNING', 'AUTOMOTIVE', 'BANKING', 'BIOTECHNOLOGY', 'BROADCAST_MEDIA', 'CHEMICALS', 'CIVIL_ENGINEERING', 'COMPUTER_HARDWARE', 'COMPUTER_SOFTWARE', 'CONSTRUCTION', 'CONSULTING', 'CONSUMER_ELECTRONICS', 'CONSUMER_GOODS', 'EDUCATION', 'ELECTRICAL_ELECTRONIC_MANUFACTURING', 'ENERGY', 'ENTERTAINMENT', 'ENVIRONMENTAL_SERVICES', 'FINANCIAL_SERVICES', 'FOOD_BEVERAGES', 'GOVERNMENT_ADMINISTRATION', 'HEALTHCARE', 'HOSPITALITY', 'HUMAN_RESOURCES', 'INDUSTRIAL_AUTOMATION', 'INFORMATION_SERVICES', 'INFORMATION_TECHNOLOGY', 'INSURANCE', 'INTERNET', 'INVESTMENT_BANKING', 'LAW_PRACTICE', 'LEGAL_SERVICES', 'LOGISTICS_SUPPLY_CHAIN', 'MANUFACTURING', 'MARKETING', 'MEDIA', 'MEDICAL_DEVICES', 'MINING_METALS', 'NONPROFIT', 'OIL_ENERGY', 'PHARMACEUTICALS', 'PUBLIC_RELATIONS', 'REAL_ESTATE', 'RESEARCH', 'RESTAURANTS', 'RETAIL', 'SPORTS', 'TELECOMMUNICATIONS', 'TRANSPORTATION', 'UTILITIES', 'VENTURE_CAPITAL', 'WHOLESALE');
 
 -- CreateEnum
-CREATE TYPE "OrganizationSize" AS ENUM ('Self-employed', '1-10 employees', '11-50 employees', '51-200 employees', '201-500 employees', '501-1,000 employees', '1,001-5,000 employees', '5,001-10,000 employees', '10,001+ employees');
+CREATE TYPE "OrganizationSize" AS ENUM ('SELF_EMPLOYED', 'ONE_TO_TEN', 'ELEVEN_TO_FIFTY', 'FIFTY_ONE_TO_TWO_HUNDRED', 'TWO_HUNDRED_ONE_TO_FIVE_HUNDRED', 'FIVE_HUNDRED_ONE_TO_ONE_THOUSAND', 'ONE_THOUSAND_ONE_TO_FIVE_THOUSAND', 'FIVE_THOUSAND_ONE_TO_TEN_THOUSAND', 'TEN_THOUSAND_PLUS');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -59,7 +59,7 @@ CREATE TABLE "OrganizationMembers" (
     "id" STRING NOT NULL,
     "organizationId" STRING NOT NULL,
     "userId" STRING NOT NULL,
-    "role" "MemberRole" NOT NULL DEFAULT 'Member',
+    "role" "MemberRole" NOT NULL DEFAULT 'MEMBER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -71,8 +71,8 @@ CREATE TABLE "Job" (
     "id" STRING NOT NULL,
     "title" STRING NOT NULL,
     "description" STRING NOT NULL,
-    "workMode" "WorkMode" NOT NULL DEFAULT 'On-site',
-    "employmentType" "EmploymentType" NOT NULL DEFAULT 'Full-time',
+    "workMode" "WorkMode" NOT NULL DEFAULT 'ONSITE',
+    "employmentType" "EmploymentType" NOT NULL DEFAULT 'FULL_TIME',
     "organizationId" STRING NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE "JobApplication" (
     "id" STRING NOT NULL,
     "userId" STRING NOT NULL,
     "jobId" STRING NOT NULL,
-    "status" "JobApplicationStatus" NOT NULL DEFAULT 'Pending',
+    "status" "JobApplicationStatus" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -131,7 +131,7 @@ CREATE TABLE "Experience" (
 -- CreateTable
 CREATE TABLE "Education" (
     "id" STRING NOT NULL,
-    "schoolName" STRING,
+    "organizationName" STRING,
     "degree" STRING,
     "fieldOfStudy" STRING,
     "startDate" TIMESTAMP(3) NOT NULL,
@@ -142,7 +142,7 @@ CREATE TABLE "Education" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" STRING NOT NULL,
-    "schoolId" STRING,
+    "organizationId" STRING,
 
     CONSTRAINT "Education_pkey" PRIMARY KEY ("id")
 );
@@ -199,4 +199,4 @@ ALTER TABLE "Experience" ADD CONSTRAINT "Experience_organizationId_fkey" FOREIGN
 ALTER TABLE "Education" ADD CONSTRAINT "Education_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Education" ADD CONSTRAINT "Education_schoolId_fkey" FOREIGN KEY ("schoolId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Education" ADD CONSTRAINT "Education_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE SET NULL ON UPDATE CASCADE;

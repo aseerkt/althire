@@ -7,10 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { Prisma } from '@/generated/prisma'
+import type { Prisma } from '@/generated/prisma/browser'
 import { formatDate } from '@/lib/utils'
 
-type JobWithOrganization = Prisma.JobGetPayload<{ include: { organization: true } }>
+type JobWithOrganization = Prisma.JobGetPayload<{
+  include: { organization: true }
+}>
 
 export function JobCard({ job }: { job: JobWithOrganization }) {
   return (

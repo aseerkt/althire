@@ -15,8 +15,7 @@ export const SignInForm = () => {
   const {
     isPending,
     handleSubmitAction: handleSignIn,
-    control,
-    setValue,
+    form,
   } = useZodFormAction({
     schema: signInSchema,
     action: signIn,
@@ -30,8 +29,8 @@ export const SignInForm = () => {
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const email = event.target.value
-    setValue('email', email)
-    setValue(
+    form.setValue('email', email)
+    form.setValue(
       'password',
       testUsers.find((user) => user.email === email)!.password,
     )
@@ -48,14 +47,14 @@ export const SignInForm = () => {
         >
           <InputField
             name='email'
-            control={control}
+            control={form.control}
             label='Email'
             type='email'
             required
           />
           <InputField
             name='password'
-            control={control}
+            control={form.control}
             label='Password'
             type='password'
             required

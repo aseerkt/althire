@@ -1,5 +1,5 @@
 import { getCurrentUser } from '@/auth/nextjs/server'
-import { MemberRole } from '@/generated/prisma'
+import { MemberRole } from '@/generated/prisma/enums'
 import { prisma } from '@/prisma/client'
 
 export async function hasAdminPrivilege(

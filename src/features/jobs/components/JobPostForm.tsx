@@ -5,9 +5,11 @@ import { TextAreaField } from '@/components/form/TextAreaField'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { NativeSelectOption } from '@/components/ui/native-select'
-import { type Organization, WorkMode } from '@/generated/prisma'
+import type { Organization } from '@/generated/prisma/browser'
+import { type EmploymentType, WorkMode } from '@/generated/prisma/enums'
 import { useZodFormAction } from '@/hooks/use-zod-form-action'
 import { createJobPost } from '../actions'
+import { employmentTypeMap, workModeMap } from '../data'
 import { createPostJobSchema } from '../schemas'
 
 type PostJobFormProps = {
@@ -17,7 +19,7 @@ type PostJobFormProps = {
 export function PostJobForm({ organizations }: PostJobFormProps) {
   const {
     isPending,
-    control,
+    form,
     handleSubmitAction: handleCreateJobPost,
   } = useZodFormAction({
     schema: createPostJobSchema,
@@ -41,14 +43,14 @@ export function PostJobForm({ organizations }: PostJobFormProps) {
         >
           <InputField
             name='title'
-            control={control}
+            control={form.control}
             label='Job title'
             type='text'
             required
           />
           <SelectField
             name='organizationId'
-            control={control}
+            control={form.control}
             label='Organization'
             required
           >
@@ -60,20 +62,35 @@ export function PostJobForm({ organizations }: PostJobFormProps) {
           </SelectField>
           <SelectField
             name='workMode'
-            control={control}
+            control={form.control}
             label='Work mode'
             required
           >
-            {Object.keys(WorkMode).map((workMode) => (
+            {Object.keys(workModeMap).map((workMode) => (
               <NativeSelectOption key={workMode} value={workMode}>
-                {workMode}
+                {workModeMap[workMode as WorkMode]}
+              </NativeSelectOption>
+            ))}
+          </SelectField>
+          <SelectField
+            name='employmentType'
+            control={form.control}
+            label='Employment type'
+            required
+          >
+            {Object.keys(employmentTypeMap).map((employmentType) => (
+              <NativeSelectOption
+                key={employmentType}
+                value={employmentTypeMap[employmentType as EmploymentType]}
+              >
+                {employmentType}
               </NativeSelectOption>
             ))}
           </SelectField>
           <TextAreaField
             maxLength={500}
             name='description'
-            control={control}
+            control={form.control}
             label='Description'
             type='textarea'
           />

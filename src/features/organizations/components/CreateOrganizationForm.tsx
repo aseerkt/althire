@@ -12,7 +12,7 @@ import {
   type Industry,
   type OrganizationSize,
   OrganizationType,
-} from '@/generated/prisma'
+} from '@/generated/prisma/enums'
 import { useZodFormAction } from '@/hooks/use-zod-form-action'
 import { cn, slugify } from '@/lib/utils'
 import { createOrganization } from '../actions'
@@ -35,27 +35,26 @@ const organizationTypes = [
 ]
 
 export const CreateOrganizationForm = () => {
-  const { control, isPending, handleSubmitAction, watch, setValue, register } =
-    useZodFormAction({
-      schema: createOrganizationSchema,
-      action: createOrganization,
-      defaultValues: {
-        name: '',
-        slug: '',
-        website: '',
-        description: '',
-        type: OrganizationType.COMPANY,
-        size: undefined,
-        industry: undefined,
-      },
-    })
+  const { isPending, handleSubmitAction, form } = useZodFormAction({
+    schema: createOrganizationSchema,
+    action: createOrganization,
+    defaultValues: {
+      name: '',
+      slug: '',
+      website: '',
+      description: '',
+      type: OrganizationType.COMPANY,
+      size: undefined,
+      industry: undefined,
+    },
+  })
 
-  const selectedType = watch('type')
+  const selectedType = form.watch('type')
 
-  const name = watch('name')
+  const name = form.watch('name')
 
   const slugifyName = useEffectEvent((name: string) => {
-    setValue('slug', slugify(name))
+    form.setValue('slug', slugify(name))
   })
 
   useEffect(() => {
@@ -92,7 +91,7 @@ export const CreateOrganizationForm = () => {
                   <input
                     type='radio'
                     value={orgType.value}
-                    {...register('type')}
+                    {...form.register('type')}
                     id={orgType.value}
                     checked={selectedType === orgType.value}
                     hidden
@@ -110,28 +109,28 @@ export const CreateOrganizationForm = () => {
           </Field>
           <InputField
             name='name'
-            control={control}
+            control={form.control}
             label='Name'
             type='text'
             placeholder="Add your organization's name"
           />
           <InputField
             name='slug'
-            control={control}
+            control={form.control}
             label={`althire.com/${selectedType.toLowerCase()}/*`}
             placeholder='Add your unique althire address'
             type='text'
           />
           <InputField
             name='website'
-            control={control}
+            control={form.control}
             label='Website'
             type='url'
             placeholder='ex: https://althire.com'
           />
           <SelectField
             name='industry'
-            control={control}
+            control={form.control}
             label='Industry'
             placeholder='Select industry'
           >
@@ -143,7 +142,7 @@ export const CreateOrganizationForm = () => {
           </SelectField>
           <SelectField
             name='size'
-            control={control}
+            control={form.control}
             label='Organization size'
             placeholder='Select size'
           >
@@ -156,7 +155,7 @@ export const CreateOrganizationForm = () => {
           <TextAreaField
             maxLength={300}
             name='tagline'
-            control={control}
+            control={form.control}
             label='Tagline'
             type='textarea'
             placeholder='ex: An information services firm helping small business succeed'
@@ -164,7 +163,7 @@ export const CreateOrganizationForm = () => {
           <TextAreaField
             maxLength={500}
             name='description'
-            control={control}
+            control={form.control}
             label='Description'
             type='textarea'
           />

@@ -1,24 +1,15 @@
+import { Controller, type FieldValues } from 'react-hook-form'
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldLabel,
 } from '@/components/ui/field'
-import {
-  type Control,
-  Controller,
-  type FieldValues,
-  type Path,
-} from 'react-hook-form'
+import type { FieldProps } from '@/types'
 import { Textarea } from '../ui/textarea'
 
-interface TextAreaFieldProps<TFieldValues extends FieldValues>
-  extends React.InputHTMLAttributes<HTMLTextAreaElement> {
-  name: Path<TFieldValues>
-  control: Control<TFieldValues>
-  label?: React.ReactNode
-  description?: React.ReactNode
-}
+type TextAreaFieldProps<TFieldValues extends FieldValues> =
+  React.InputHTMLAttributes<HTMLTextAreaElement> & FieldProps<TFieldValues>
 
 export const TextAreaField = <TFieldValues extends FieldValues>({
   name,

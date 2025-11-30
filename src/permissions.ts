@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from './auth/nextjs/server'
-import { MemberRole } from './generated/prisma'
+import { MemberRole } from './generated/prisma/client'
 import { prisma } from './prisma/client'
 
 export const requireAuth = async () => {

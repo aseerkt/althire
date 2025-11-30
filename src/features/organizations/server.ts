@@ -1,5 +1,5 @@
 import { getCurrentUser } from '@/auth/nextjs/server'
-import { PER_PAGE } from '@/data/pagination'
+import { PER_PAGE } from '@/data/common'
 import { prisma } from '@/prisma/client'
 import type { PaginationParams } from '@/types'
 

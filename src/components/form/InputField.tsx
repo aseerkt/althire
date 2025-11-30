@@ -1,3 +1,4 @@
+import { Controller, type FieldValues } from 'react-hook-form'
 import {
   Field,
   FieldDescription,
@@ -5,20 +6,10 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import {
-  type Control,
-  Controller,
-  type FieldValues,
-  type Path,
-} from 'react-hook-form'
+import type { FieldProps } from '@/types'
 
-interface InputFieldProps<TFieldValues extends FieldValues>
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  name: Path<TFieldValues>
-  control: Control<TFieldValues>
-  label?: React.ReactNode
-  description?: React.ReactNode
-}
+type InputFieldProps<TFieldValues extends FieldValues> =
+  React.InputHTMLAttributes<HTMLInputElement> & FieldProps<TFieldValues>
 
 export const InputField = <TFieldValues extends FieldValues>({
   name,

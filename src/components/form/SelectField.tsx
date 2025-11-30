@@ -1,25 +1,18 @@
-import {
-  type Control,
-  Controller,
-  type FieldValues,
-  type Path,
-} from 'react-hook-form'
+import { Controller, type FieldValues } from 'react-hook-form'
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldLabel,
 } from '@/components/ui/field'
+import type { FieldProps } from '@/types'
 import { NativeSelect, NativeSelectOption } from '../ui/native-select'
 
-interface SelectFieldProps<TFieldValues extends FieldValues>
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  name: Path<TFieldValues>
-  control: Control<TFieldValues>
-  label?: React.ReactNode
-  description?: React.ReactNode
-  placeholder?: React.ReactNode
-}
+type SelectFieldProps<TFieldValues extends FieldValues> =
+  React.SelectHTMLAttributes<HTMLSelectElement> &
+    FieldProps<TFieldValues> & {
+      placeholder: React.ReactNode
+    }
 
 export const SelectField = <TFieldValues extends FieldValues>({
   name,
@@ -34,6 +27,7 @@ export const SelectField = <TFieldValues extends FieldValues>({
     <Controller
       name={name}
       control={control}
+      // biome-ignore lint/suspicious/noExplicitAny: false
       defaultValue={'' as any}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>

@@ -1,9 +1,5 @@
 import { type ClassValue, clsx } from 'clsx'
-import type { FieldValues, Path, UseFormSetError } from 'react-hook-form'
 import { twMerge } from 'tailwind-merge'
-import { z } from 'zod'
-import type { $ZodFlattenedError } from 'zod/v4/core'
-import type { ActionResponse } from '@/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -50,38 +46,10 @@ export function formatDate(date: string | Date): string {
   return 'just now'
 }
 
-export function setZodFormError<TFieldValues extends FieldValues>(
-  errors: Omit<$ZodFlattenedError<TFieldValues>, 'formErrors'>,
-  setError: UseFormSetError<TFieldValues>,
-) {
-  Object.entries(errors.fieldErrors).forEach(([key, messages]) => {
-    if (messages?.length) {
-      setError(key as Path<TFieldValues>, {
-        message: messages[0],
-      })
-    }
+export function formatLocaleDateString(date: string | Date | number) {
+  return new Date(date).toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
   })
-}
-
-type ZodAction<TSchema extends z.ZodObject<z.ZodRawShape>> = (
-  data: z.infer<TSchema>,
-) => Promise<ActionResponse<z.infer<TSchema>>>
-
-export function createZodAction<TSchema extends z.ZodObject<z.ZodRawShape>>(
-  schema: TSchema,
-  fn: ZodAction<TSchema>,
-): ZodAction<TSchema> {
-  return async (unsafeData) => {
-    const parsed = schema.safeParse(unsafeData)
-
-    if (!parsed.success) {
-      return {
-        type: 'error',
-        message: 'Invalid form data',
-        errors: z.flattenError(parsed.error),
-      }
-    }
-
-    return fn(parsed.data)
-  }
 }

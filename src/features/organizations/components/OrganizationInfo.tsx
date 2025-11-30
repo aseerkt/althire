@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { Organization } from '@/generated/prisma'
+import type { Organization } from '@/generated/prisma/browser'
 import { industryMap, organizationSizeMap } from '../data'
 
 const organizationTabs = [

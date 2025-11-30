@@ -1,6 +1,9 @@
 export const CACHE_KEY = {
   CURRENT_USER: () => 'CURRENT_USER',
 
+  GET_USER_BY_USERNAME: (username: string) =>
+    `GET_USER_BY_USERNAME:${username}`,
+
   GET_JOB_BY_ID: (jobId: string) => `GET_JOB_BY_ID:${jobId}`,
 
   GET_JOB_APPLICANTS_COUNT: (jobId: string) =>

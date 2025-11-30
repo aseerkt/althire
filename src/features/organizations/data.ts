@@ -1,4 +1,4 @@
-import { Industry, OrganizationSize } from '@/generated/prisma'
+import { Industry, OrganizationSize } from '@/generated/prisma/enums'
 
 export const industryMap: Record<Industry, string> = {
   [Industry.ACCOUNTING]: 'Accounting',

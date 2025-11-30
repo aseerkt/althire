@@ -1,11 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "cockroachdb"
-  url      = env("DATABASE_URL")
 }
 
 // Tables
@@ -140,54 +139,54 @@ model Experience {
 }
 
 model Education {
-  id           String    @id @default(uuid())
-  schoolName   String?
-  degree       String?
-  fieldOfStudy String?
-  startDate    DateTime
-  endDate      DateTime?
-  grade        String?
-  activities   String?
-  description  String?
+  id               String    @id @default(uuid())
+  organizationName String?
+  degree           String?
+  fieldOfStudy     String?
+  startDate        DateTime
+  endDate          DateTime?
+  grade            String?
+  activities       String?
+  description      String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId   String
-  schoolId String?
+  userId         String
+  organizationId String?
 
-  user   User          @relation(fields: [userId], references: [id])
-  school Organization? @relation(fields: [schoolId], references: [id])
+  user         User          @relation(fields: [userId], references: [id])
+  organization Organization? @relation(fields: [organizationId], references: [id])
 }
 
 // Enums
 
 enum WorkMode {
-  REMOTE @map("Remote")
-  ONSITE @map("On-site")
-  HYBRID @map("Hybrid")
+  REMOTE
+  ONSITE
+  HYBRID
 }
 
 enum EmploymentType {
-  FULL_TIME  @map("Full-time")
-  PART_TIME  @map("Part-time")
-  CONTRACT   @map("Contract")
-  TEMPORARY  @map("Temporary")
-  VOLUNTEER  @map("Volunteer")
-  INTERNSHIP @map("Internship")
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  TEMPORARY
+  VOLUNTEER
+  INTERNSHIP
 }
 
 enum JobApplicationStatus {
-  PENDING  @map("Pending")
-  REVIEWED @map("Reviewed")
-  ACCEPTED @map("Accepted")
-  REJECTED @map("Rejected")
+  PENDING
+  REVIEWED
+  ACCEPTED
+  REJECTED
 }
 
 enum MemberRole {
-  SUPER_ADMIN @map("Super Admin")
-  ADMIN       @map("Admin")
-  MEMBER      @map("Member")
+  SUPER_ADMIN
+  ADMIN
+  MEMBER
 }
 
 enum OrganizationType {
@@ -196,73 +195,73 @@ enum OrganizationType {
 }
 
 enum Industry {
-  ACCOUNTING                          @map("Accounting")
-  ADVERTISING                         @map("Advertising")
-  AGRICULTURE                         @map("Agriculture")
-  AIRLINES_AVIATION                   @map("Airlines & Aviation")
-  APPAREL_FASHION                     @map("Apparel & Fashion")
-  ARCHITECTURE_PLANNING               @map("Architecture & Planning")
-  AUTOMOTIVE                          @map("Automotive")
-  BANKING                             @map("Banking")
-  BIOTECHNOLOGY                       @map("Biotechnology")
-  BROADCAST_MEDIA                     @map("Broadcast Media")
-  CHEMICALS                           @map("Chemicals")
-  CIVIL_ENGINEERING                   @map("Civil Engineering")
-  COMPUTER_HARDWARE                   @map("Computer Hardware")
-  COMPUTER_SOFTWARE                   @map("Computer Software")
-  CONSTRUCTION                        @map("Construction")
-  CONSULTING                          @map("Consulting")
-  CONSUMER_ELECTRONICS                @map("Consumer Electronics")
-  CONSUMER_GOODS                      @map("Consumer Goods")
-  EDUCATION                           @map("Education")
-  ELECTRICAL_ELECTRONIC_MANUFACTURING @map("Electrical/Electronic Manufacturing")
-  ENERGY                              @map("Energy")
-  ENTERTAINMENT                       @map("Entertainment")
-  ENVIRONMENTAL_SERVICES              @map("Environmental Services")
-  FINANCIAL_SERVICES                  @map("Financial Services")
-  FOOD_BEVERAGES                      @map("Food & Beverages")
-  GOVERNMENT_ADMINISTRATION           @map("Government Administration")
-  HEALTHCARE                          @map("Healthcare")
-  HOSPITALITY                         @map("Hospitality")
-  HUMAN_RESOURCES                     @map("Human Resources")
-  INDUSTRIAL_AUTOMATION               @map("Industrial Automation")
-  INFORMATION_SERVICES                @map("Information Services")
-  INFORMATION_TECHNOLOGY              @map("Information Technology")
-  INSURANCE                           @map("Insurance")
-  INTERNET                            @map("Internet")
-  INVESTMENT_BANKING                  @map("Investment Banking")
-  LAW_PRACTICE                        @map("Law Practice")
-  LEGAL_SERVICES                      @map("Legal Services")
-  LOGISTICS_SUPPLY_CHAIN              @map("Logistics & Supply Chain")
-  MANUFACTURING                       @map("Manufacturing")
-  MARKETING                           @map("Marketing")
-  MEDIA                               @map("Media")
-  MEDICAL_DEVICES                     @map("Medical Devices")
-  MINING_METALS                       @map("Mining & Metals")
-  NONPROFIT                           @map("Nonprofit Organization Management")
-  OIL_ENERGY                          @map("Oil & Energy")
-  PHARMACEUTICALS                     @map("Pharmaceuticals")
-  PUBLIC_RELATIONS                    @map("Public Relations & Communications")
-  REAL_ESTATE                         @map("Real Estate")
-  RESEARCH                            @map("Research")
-  RESTAURANTS                         @map("Restaurants")
-  RETAIL                              @map("Retail")
-  SPORTS                              @map("Sports")
-  TELECOMMUNICATIONS                  @map("Telecommunications")
-  TRANSPORTATION                      @map("Transportation")
-  UTILITIES                           @map("Utilities")
-  VENTURE_CAPITAL                     @map("Venture Capital & Private Equity")
-  WHOLESALE                           @map("Wholesale")
+  ACCOUNTING
+  ADVERTISING
+  AGRICULTURE
+  AIRLINES_AVIATION
+  APPAREL_FASHION
+  ARCHITECTURE_PLANNING
+  AUTOMOTIVE
+  BANKING
+  BIOTECHNOLOGY
+  BROADCAST_MEDIA
+  CHEMICALS
+  CIVIL_ENGINEERING
+  COMPUTER_HARDWARE
+  COMPUTER_SOFTWARE
+  CONSTRUCTION
+  CONSULTING
+  CONSUMER_ELECTRONICS
+  CONSUMER_GOODS
+  EDUCATION
+  ELECTRICAL_ELECTRONIC_MANUFACTURING
+  ENERGY
+  ENTERTAINMENT
+  ENVIRONMENTAL_SERVICES
+  FINANCIAL_SERVICES
+  FOOD_BEVERAGES
+  GOVERNMENT_ADMINISTRATION
+  HEALTHCARE
+  HOSPITALITY
+  HUMAN_RESOURCES
+  INDUSTRIAL_AUTOMATION
+  INFORMATION_SERVICES
+  INFORMATION_TECHNOLOGY
+  INSURANCE
+  INTERNET
+  INVESTMENT_BANKING
+  LAW_PRACTICE
+  LEGAL_SERVICES
+  LOGISTICS_SUPPLY_CHAIN
+  MANUFACTURING
+  MARKETING
+  MEDIA
+  MEDICAL_DEVICES
+  MINING_METALS
+  NONPROFIT
+  OIL_ENERGY
+  PHARMACEUTICALS
+  PUBLIC_RELATIONS
+  REAL_ESTATE
+  RESEARCH
+  RESTAURANTS
+  RETAIL
+  SPORTS
+  TELECOMMUNICATIONS
+  TRANSPORTATION
+  UTILITIES
+  VENTURE_CAPITAL
+  WHOLESALE
 }
 
 enum OrganizationSize {
-  SELF_EMPLOYED                     @map("Self-employed")
-  ONE_TO_TEN                        @map("1-10 employees")
-  ELEVEN_TO_FIFTY                   @map("11-50 employees")
-  FIFTY_ONE_TO_TWO_HUNDRED          @map("51-200 employees")
-  TWO_HUNDRED_ONE_TO_FIVE_HUNDRED   @map("201-500 employees")
-  FIVE_HUNDRED_ONE_TO_ONE_THOUSAND  @map("501-1,000 employees")
-  ONE_THOUSAND_ONE_TO_FIVE_THOUSAND @map("1,001-5,000 employees")
-  FIVE_THOUSAND_ONE_TO_TEN_THOUSAND @map("5,001-10,000 employees")
-  TEN_THOUSAND_PLUS                 @map("10,001+ employees")
+  SELF_EMPLOYED
+  ONE_TO_TEN
+  ELEVEN_TO_FIFTY
+  FIFTY_ONE_TO_TWO_HUNDRED
+  TWO_HUNDRED_ONE_TO_FIVE_HUNDRED
+  FIVE_HUNDRED_ONE_TO_ONE_THOUSAND
+  ONE_THOUSAND_ONE_TO_FIVE_THOUSAND
+  FIVE_THOUSAND_ONE_TO_TEN_THOUSAND
+  TEN_THOUSAND_PLUS
 }

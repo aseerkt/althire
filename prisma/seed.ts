@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { faker } from '@faker-js/faker'
 import { hashPassword } from '@/auth/core/passwordHasher'
 import { testUsers } from '@/data/test-users'
@@ -7,14 +8,10 @@ import {
   OrganizationSize,
   OrganizationType,
   type Prisma,
-  PrismaClient,
   WorkMode,
-} from '@/generated/prisma'
+} from '@/generated/prisma/client'
 import { slugify } from '@/lib/utils'
-
-// Prisma Client
-
-const prisma = new PrismaClient()
+import { prisma } from '@/prisma/client'
 
 // Constants
 

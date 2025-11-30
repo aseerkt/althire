@@ -2,7 +2,7 @@ import { UserIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import type { User } from '@/generated/prisma'
+import type { User } from '@/generated/prisma/browser'
 
 export function UserCard({
   user,

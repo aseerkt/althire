@@ -3,7 +3,7 @@
 import { updateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { CACHE_KEY } from '@/data/cache'
-import { createZodAction } from '@/lib/utils'
+import { createZodAction } from '@/lib/action'
 import { requireAdminPrivilege, requireAuth } from '@/permissions'
 import { prisma } from '@/prisma/client'
 import { createPostJobSchema } from './schemas'

@@ -1,15 +1,16 @@
 'use client'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 export function JobFilters() {
   const router = useRouter()
+  const pathname = usePathname()
   const params = useSearchParams()
 
   const updateParam = (key: string, value: string) => {
     const newParams = new URLSearchParams(params)
     if (value) newParams.set(key, value)
     else newParams.delete(key)
-    router.push(`/jobs?${newParams.toString()}`)
+    router.push(`${pathname}?${newParams.toString()}`)
   }
 
   return (

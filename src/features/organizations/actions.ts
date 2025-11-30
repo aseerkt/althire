@@ -2,8 +2,9 @@
 
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/auth/nextjs/server'
-import { MemberRole, Prisma } from '@/generated/prisma'
-import { createZodAction } from '@/lib/utils'
+import { Prisma } from '@/generated/prisma/browser'
+import { MemberRole } from '@/generated/prisma/enums'
+import { createZodAction } from '@/lib/action'
 import { prisma } from '@/prisma/client'
 import { createOrganizationSchema } from './schemas'
 
@@ -21,7 +22,7 @@ export const createOrganization = createZodAction(
           data: {
             organizationId: company.id,
             userId: currentUser!.id,
-            role: MemberRole.EMPLOYER,
+            role: MemberRole.SUPER_ADMIN,
           },
         })
         return company

@@ -1,7 +1,7 @@
 import { BuildingIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
-import type { Prisma } from '@/generated/prisma'
+import type { Prisma } from '@/generated/prisma/browser'
 
 type JobWithOrganization = Prisma.JobGetPayload<{
   include: { organization: true }
