@@ -20,9 +20,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url.toString())
   }
   if (session && !isGuestRoute) {
-    // protect company admin page
-    console.log(request.nextUrl.pathname, 'pathname in proxy')
-    // protect user settings page
+    // custom page protection
   }
 
   return NextResponse.next()

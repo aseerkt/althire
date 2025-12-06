@@ -3,22 +3,25 @@ import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import EducationList from '@/features/education/components/EducationList'
-import ExperienceList from '@/features/experience/components/ExperienceList'
+import { EducationList } from '@/features/education/components/EducationList'
+import { ExperienceList } from '@/features/experience/components/ExperienceList'
+import { requireAuth } from '@/permissions'
 import { UserProfileSection } from '../layouts/UserProfileSection'
 import { getUserByUsername } from '../server'
 
 const sections = [
   {
     title: 'Experience',
-    editHref: '/details/experience',
     addHref: '/forms/experience/new',
+    editHref: (username: string) => (itemId: string) =>
+      `/alt/${username}/forms/experience/edit/${itemId}`,
     component: ExperienceList,
   },
   {
     title: 'Education',
-    editHref: '/details/education',
     addHref: '/forms/education/new',
+    editHref: (username: string) => (itemId: string) =>
+      `/alt/${username}/forms/education/edit/${itemId}`,
     component: EducationList,
   },
 ]
@@ -29,6 +32,10 @@ export async function UserProfile({ username }: { username: string }) {
   if (!user) {
     return notFound()
   }
+
+  const currentUser = await requireAuth()
+
+  const isCurrentUserProfile = currentUser.id === user.id
 
   return (
     <div className='flex flex-col gap-4'>
@@ -49,11 +56,19 @@ export async function UserProfile({ username }: { username: string }) {
         <UserProfileSection
           title={section.title}
           key={section.title}
-          editHref={`/alt/${username}${section.editHref}`}
-          addHref={`/alt/${username}${section.addHref}`}
+          addHref={
+            isCurrentUserProfile
+              ? `/alt/${username}${section.addHref}`
+              : undefined
+          }
         >
           <Suspense fallback={<Skeleton />}>
-            <section.component userId={user.id} />
+            <section.component
+              userId={user.id}
+              editHref={
+                isCurrentUserProfile ? section.editHref(username) : undefined
+              }
+            />
           </Suspense>
         </UserProfileSection>
       ))}

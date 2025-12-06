@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon } from 'lucide-react'
+import { PlusIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,25 +19,17 @@ type UserProfileSectionProps = {
 export function UserProfileSection({
   title,
   addHref,
-  editHref,
   children,
 }: UserProfileSectionProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className='text-xl'>{title}</CardTitle>
         <CardAction>
           {addHref && (
             <Button variant='ghost' size='icon' asChild>
               <Link href={addHref}>
                 <PlusIcon />
-              </Link>
-            </Button>
-          )}
-          {editHref && (
-            <Button variant='ghost' size='icon' asChild>
-              <Link href={editHref}>
-                <PencilIcon />
               </Link>
             </Button>
           )}

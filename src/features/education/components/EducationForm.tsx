@@ -47,7 +47,7 @@ export function EducationForm() {
       <TextAreaField
         control={form.control}
         name='description'
-        label='Activities and societies'
+        label='Description'
       />
     </div>
   )

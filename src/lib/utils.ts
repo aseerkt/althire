@@ -16,7 +16,7 @@ export function slugify(input: string): string {
     .slice(0, 80) // optional: limit slug length
 }
 
-export function formatDate(date: string | Date): string {
+export function formatDateFromNow(date: string | Date): string {
   const now = Date.now()
   const past = new Date(date).getTime()
   const diffInSeconds = Math.round((now - past) / 1000)
@@ -52,4 +52,35 @@ export function formatLocaleDateString(date: string | Date | number) {
     month: '2-digit',
     year: 'numeric',
   })
+}
+
+export function formatDateRangeWithDuration(
+  start: Date,
+  end?: Date | null,
+): string {
+  const format = (d: Date) =>
+    d.toLocaleString('en-US', { month: 'short', year: 'numeric' })
+
+  const startStr = format(start)
+  const endDate = end ?? new Date()
+  const endStr = end ? format(endDate) : 'Present'
+
+  // Calculate duration
+  let years = endDate.getFullYear() - start.getFullYear()
+  let months = endDate.getMonth() - start.getMonth()
+
+  if (months < 0) {
+    years -= 1
+    months += 12
+  }
+
+  const yearsStr = years > 0 ? `${years} yr${years > 1 ? 's' : ''}` : ''
+  const monthsStr = months > 0 ? `${months} mo${months > 1 ? 's' : ''}` : ''
+
+  const duration =
+    yearsStr && monthsStr
+      ? `${yearsStr} ${monthsStr}`
+      : yearsStr || monthsStr || '0 mos'
+
+  return `${startStr} – ${endStr} · ${duration}`
 }

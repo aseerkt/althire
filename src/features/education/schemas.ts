@@ -4,7 +4,7 @@ import { z } from 'zod'
 export const educationSchema = z.object({
   id: z.uuid().optional(),
 
-  organizationName: z.string().trim(),
+  organizationName: z.string().trim().min(1, 'Organization is required'),
   degree: z.string().trim().optional().nullable(),
   fieldOfStudy: z.string().trim().optional().nullable(),
 

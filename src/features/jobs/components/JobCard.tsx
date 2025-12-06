@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import type { Prisma } from '@/generated/prisma/browser'
-import { formatDate } from '@/lib/utils'
+import { formatDateFromNow } from '@/lib/utils'
 
 type JobWithOrganization = Prisma.JobGetPayload<{
   include: { organization: true }
@@ -27,7 +27,7 @@ export function JobCard({ job }: { job: JobWithOrganization }) {
             {job.title} ({job.workMode})
           </CardTitle>
         </CardContent>
-        <CardFooter>{formatDate(job.createdAt)}</CardFooter>
+        <CardFooter>{formatDateFromNow(job.createdAt)}</CardFooter>
       </Card>
     </Link>
   )

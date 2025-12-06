@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -26,22 +25,20 @@ export function UserProfileSectionForm({
   username,
   section,
   mode = 'ADD',
-  formEntryPoint = 'profile',
 }: UserProfileSectionFormProps) {
   const router = useRouter()
   const pathname = usePathname()
   const currentSection = userProfileSections[section]
   const { handleSubmitAction, isPending, form } = useZodFormAction({
     schema: currentSection.schema,
-    action: currentSection.action,
+    // biome-ignore lint/suspicious/noExplicitAny: false positive
+    action: currentSection.action as any,
     defaultValues: currentSection.defaultValues,
     onSuccess: redirectBack,
   })
 
   function redirectBack() {
-    router.push(
-      `/alt/${username}${formEntryPoint === 'profile' ? '' : `/details/${section}`}`,
-    )
+    router.push(`/alt/${username}`)
   }
 
   function redirectBackWithReset() {
@@ -74,11 +71,6 @@ export function UserProfileSectionForm({
                   ? currentSection.addFormTitle
                   : currentSection.editFormTitle}
               </DialogTitle>
-              {currentSection.formDescription && (
-                <DialogDescription>
-                  {currentSection.formDescription}
-                </DialogDescription>
-              )}
             </DialogHeader>
             <div className='flex-1 overflow-y-auto'>
               <div className='px-6 py-8 flex flex-col space-y-4'>

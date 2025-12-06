@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import type { Job, Organization } from '@/generated/prisma/browser'
-import { formatDate } from '@/lib/utils'
+import { formatDateFromNow } from '@/lib/utils'
 
 type JobInfoProps = {
   job: Job & { organization: Organization }
@@ -40,7 +40,7 @@ export function JobInfo({
       </CardHeader>
       <CardContent>
         <p>
-          {formatDate(job.createdAt)} · {totalJobApplicantsCount}{' '}
+          {formatDateFromNow(job.createdAt)} · {totalJobApplicantsCount}{' '}
           {pluralize('applicant', totalJobApplicantsCount)}
         </p>
         <Badge variant='outline'>{job.workMode}</Badge>

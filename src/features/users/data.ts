@@ -1,16 +1,31 @@
-import type { z } from 'zod'
+import dynamic from 'next/dynamic'
 import { createEducation } from '../education/actions'
-import { EducationForm } from '../education/components/EducationForm'
-import { educationWithValidation } from '../education/schemas'
+import {
+  type EducationFormValues,
+  educationWithValidation,
+} from '../education/schemas'
 import { createExperience } from '../experience/actions'
-import { ExperienceForm } from '../experience/components/ExperienceForm'
-import { experienceWithValidation } from '../experience/schemas'
+import {
+  type ExperienceFormValues,
+  experienceWithValidation,
+} from '../experience/schemas'
+
+// form components
+
+const EducationForm = dynamic(() =>
+  import('../education/components/EducationForm').then((m) => m.EducationForm),
+)
+
+const ExperienceForm = dynamic(() =>
+  import('../experience/components/ExperienceForm').then(
+    (m) => m.ExperienceForm,
+  ),
+)
 
 export const userProfileSections = {
   experience: {
     addFormTitle: 'Add experience',
     editFormTitle: 'Edit experience',
-    formDescription: '',
     schema: experienceWithValidation,
     action: createExperience,
     defaultValues: {
@@ -18,20 +33,19 @@ export const userProfileSections = {
       description: '',
       organizationName: '',
       isCurrentlyWorking: false,
-    } as z.infer<typeof experienceWithValidation>,
+    } as ExperienceFormValues,
     form: ExperienceForm,
   },
   education: {
     addFormTitle: 'Add education',
     editFormTitle: 'Edit education',
-    formDescription: '',
     schema: educationWithValidation,
     action: createEducation,
     defaultValues: {
       organizationName: '',
       degree: '',
       grade: '',
-    } as z.infer<typeof educationWithValidation>,
+    } as EducationFormValues,
     form: EducationForm,
   },
 }
