@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write",
-    "seed": "tsx prisma/seed.ts"
+    "dev": "bun --bun next dev",
+    "build": "bun --bun next build",
+    "start": "bun --bun next start",
+    "lint": "bun --bun biome check",
+    "format": "bun --bun biome format --write",
+    "seed": "bun run prisma/seed.ts",
+    "prisma:migrate": "bunx --bun prisma migrate dev --name",
+    "prisma:generate": "bunx --bun prisma generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
