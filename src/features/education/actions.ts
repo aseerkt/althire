@@ -23,3 +23,25 @@ export const createEducation = createZodAction(
     }
   },
 )
+
+export const editEducation = createZodAction(
+  educationWithValidation,
+  async (data) => {
+    const currentUser = await requireAuth()
+
+    await prisma.education.update({
+      where: {
+        id: data.id,
+        userId: currentUser.id,
+      },
+      data: {
+        ...data,
+      },
+    })
+
+    return {
+      type: 'success',
+      message: 'Education added',
+    }
+  },
+)

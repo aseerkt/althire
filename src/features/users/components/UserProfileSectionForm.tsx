@@ -1,6 +1,6 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
-import { FormProvider } from 'react-hook-form'
+import { type FieldValues, FormProvider } from 'react-hook-form'
 import { showAlert } from '@/components/AlertDialogProvider'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,26 +14,38 @@ import {
 import { useZodFormAction } from '@/hooks/use-zod-form-action'
 import { type UserProfileSection, userProfileSections } from '../data'
 
-type UserProfileSectionFormProps = {
+type BaseProps = {
   username: string
   section: UserProfileSection
-  mode?: 'ADD' | 'EDIT'
-  formEntryPoint?: 'profile' | 'details'
 }
+
+type AddModeProps = BaseProps & {
+  mode?: 'ADD'
+  initialData?: never
+}
+
+type EditModeProps = BaseProps & {
+  mode: 'EDIT'
+  initialData: FieldValues
+}
+
+type UserProfileSectionFormProps = AddModeProps | EditModeProps
 
 export function UserProfileSectionForm({
   username,
   section,
   mode = 'ADD',
+  initialData,
 }: UserProfileSectionFormProps) {
   const router = useRouter()
   const pathname = usePathname()
   const currentSection = userProfileSections[section]
-  const { handleSubmitAction, isPending, form } = useZodFormAction({
+  // biome-ignore lint/suspicious/noExplicitAny: false positive
+  const { handleSubmitAction, isPending, form } = useZodFormAction<any>({
     schema: currentSection.schema,
-    // biome-ignore lint/suspicious/noExplicitAny: false positive
-    action: currentSection.action as any,
-    defaultValues: currentSection.defaultValues,
+    action:
+      mode === 'ADD' ? currentSection.createAction : currentSection.editAction,
+    defaultValues: mode === 'EDIT' ? initialData : currentSection.defaultValues,
     onSuccess: redirectBack,
   })
 
@@ -64,7 +76,7 @@ export function UserProfileSectionForm({
     <Dialog key={pathname} open onOpenChange={handleClose}>
       <FormProvider {...form}>
         <form onSubmit={handleSubmitAction} id='section-form'>
-          <DialogContent className='sm:max-w-[450px] max-h-[calc(100dvh-100px)] flex flex-col gap-0 p-0'>
+          <DialogContent className='sm:max-w-112.5 max-h-[calc(100dvh-100px)] flex flex-col gap-0 p-0'>
             <DialogHeader className='p-6 border-b'>
               <DialogTitle>
                 {mode === 'ADD'

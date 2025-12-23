@@ -1,14 +1,10 @@
 import dynamic from 'next/dynamic'
-import { createEducation } from '../education/actions'
-import {
-  type EducationFormValues,
-  educationWithValidation,
-} from '../education/schemas'
-import { createExperience } from '../experience/actions'
-import {
-  type ExperienceFormValues,
-  experienceWithValidation,
-} from '../experience/schemas'
+import type z from 'zod'
+import { createEducation, editEducation } from '../education/actions'
+import { educationWithValidation } from '../education/schemas'
+import { createExperience, editExperience } from '../experience/actions'
+import { experienceWithValidation } from '../experience/schemas'
+import type { ProfileSectionConfig } from './types'
 
 // form components
 
@@ -22,32 +18,45 @@ const ExperienceForm = dynamic(() =>
   ),
 )
 
+// form section
+
 export const userProfileSections = {
   experience: {
     addFormTitle: 'Add experience',
     editFormTitle: 'Edit experience',
     schema: experienceWithValidation,
-    action: createExperience,
+    createAction: createExperience,
+    editAction: editExperience,
     defaultValues: {
       title: '',
       description: '',
       organizationName: '',
       isCurrentlyWorking: false,
-    } as ExperienceFormValues,
+    },
     form: ExperienceForm,
-  },
+  } satisfies ProfileSectionConfig<typeof experienceWithValidation>,
   education: {
     addFormTitle: 'Add education',
     editFormTitle: 'Edit education',
     schema: educationWithValidation,
-    action: createEducation,
+    createAction: createEducation,
+    editAction: editEducation,
     defaultValues: {
       organizationName: '',
       degree: '',
       grade: '',
-    } as EducationFormValues,
+    },
     form: EducationForm,
-  },
+  } satisfies ProfileSectionConfig<typeof educationWithValidation>,
 }
 
+// derived types
+
 export type UserProfileSection = keyof typeof userProfileSections
+
+export type SectionFormSchema<S extends UserProfileSection> =
+  (typeof userProfileSections)[S]['schema']
+
+export type SectionFormValues<S extends UserProfileSection> = z.infer<
+  SectionFormSchema<S>
+>

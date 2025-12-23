@@ -1,6 +1,7 @@
 import { cacheTag } from 'next/cache'
 import { CACHE_KEY } from '@/data/cache'
 import { prisma } from '@/prisma/client'
+import type { UserProfileSection } from './data'
 
 export const getUserByUsername = async (username: string) => {
   'use cache'
@@ -10,4 +11,19 @@ export const getUserByUsername = async (username: string) => {
     omit: { password: true, salt: true, email: true },
   })
   return user
+}
+
+export const getUserProfileSection = async (
+  userId: string,
+  section: UserProfileSection,
+  itemId: string,
+) => {
+  switch (section) {
+    case 'experience':
+      return prisma.experience.findFirst({ where: { userId, id: itemId } })
+    case 'education':
+      return prisma.education.findFirst({ where: { userId, id: itemId } })
+    default:
+      return null
+  }
 }

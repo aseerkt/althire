@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import type { ActionResponse } from '@/types'
 
-type ZodAction<TSchema extends z.ZodObject<z.ZodRawShape>> = (
+export type ZodAction<TSchema extends z.ZodObject<z.ZodRawShape>> = (
   data: z.infer<TSchema>,
 ) => Promise<ActionResponse<z.infer<TSchema>>>
 

@@ -23,3 +23,25 @@ export const createExperience = createZodAction(
     }
   },
 )
+
+export const editExperience = createZodAction(
+  experienceWithValidation,
+  async (data) => {
+    const currentUser = await requireAuth()
+
+    await prisma.experience.update({
+      where: {
+        id: data.id,
+        userId: currentUser.id,
+      },
+      data: {
+        ...data,
+      },
+    })
+
+    return {
+      type: 'success',
+      message: 'Experience updated',
+    }
+  },
+)

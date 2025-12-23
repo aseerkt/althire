@@ -44,7 +44,7 @@ export const DateField = <TFieldValues extends FieldValues>({
                 variant='outline'
                 data-empty={!date}
                 disabled={props.disabled}
-                className='data-[empty=true]:text-muted-foreground w-[280px] justify-start text-left font-normal'
+                className='data-[empty=true]:text-muted-foreground w-70 justify-start text-left font-normal'
               >
                 <CalendarIcon />
                 {field.value ? (
@@ -63,10 +63,12 @@ export const DateField = <TFieldValues extends FieldValues>({
                 captionLayout='dropdown'
                 {...field}
                 selected={field.value}
+                month={field.value}
                 onSelect={(date) => {
                   field.onChange(date)
                   setOpen(false)
                 }}
+                onMonthChange={field.onChange}
               />
             </PopoverContent>
           </Popover>
