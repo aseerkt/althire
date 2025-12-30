@@ -45,6 +45,8 @@ export const userProfileSections = {
       organizationName: '',
       degree: '',
       grade: '',
+      activities: '',
+      description: '',
     },
     form: EducationForm,
   } satisfies ProfileSectionConfig<typeof educationWithValidation>,

@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/auth/nextjs/server'
-import { Prisma } from '@/generated/prisma/browser'
+import { Prisma } from '@/generated/prisma/client'
 import { MemberRole } from '@/generated/prisma/enums'
 import { createZodAction } from '@/lib/action'
 import { prisma } from '@/prisma/client'
