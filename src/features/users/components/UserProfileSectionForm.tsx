@@ -1,16 +1,8 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
-import { type FieldValues, FormProvider } from 'react-hook-form'
+import type { FieldValues } from 'react-hook-form'
 import { showAlert } from '@/components/AlertDialogProvider'
-import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { DialogForm } from '@/components/DialogForm'
 import { useZodFormAction } from '@/hooks/use-zod-form-action'
 import { type UserProfileSection, userProfileSections } from '../data'
 
@@ -73,36 +65,20 @@ export function UserProfileSectionForm({
   }
 
   return (
-    <Dialog key={pathname} open onOpenChange={handleClose}>
-      <FormProvider {...form}>
-        <form onSubmit={handleSubmitAction} id='section-form'>
-          <DialogContent className='sm:max-w-112.5 max-h-[calc(100dvh-100px)] flex flex-col gap-0 p-0'>
-            <DialogHeader className='p-6 border-b'>
-              <DialogTitle>
-                {mode === 'ADD'
-                  ? currentSection.addFormTitle
-                  : currentSection.editFormTitle}
-              </DialogTitle>
-            </DialogHeader>
-            <div className='flex-1 overflow-y-auto'>
-              <div className='px-6 py-8 flex flex-col space-y-4'>
-                <currentSection.form />
-              </div>
-            </div>
-
-            <DialogFooter className='p-6 border-t'>
-              <DialogClose asChild>
-                <Button type='button' variant='outline'>
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button type='submit' form='section-form' disabled={isPending}>
-                Save
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </form>
-      </FormProvider>
-    </Dialog>
+    <DialogForm
+      dialogKey={pathname}
+      open
+      onOpenChange={handleClose}
+      formTitle={
+        mode === 'ADD'
+          ? currentSection.addFormTitle
+          : currentSection.editFormTitle
+      }
+      form={form}
+      onSubmit={handleSubmitAction}
+      isPending={isPending}
+    >
+      <currentSection.form />
+    </DialogForm>
   )
 }

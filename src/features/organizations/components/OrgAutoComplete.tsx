@@ -23,8 +23,9 @@ export const OrgAutoComplete = ({
   const debouncedSearch = useDebounce(form.watch('organizationName'))
 
   const { data = [], isLoading } = useSWR<Organization[]>(() => {
-    const searchParams = new URLSearchParams()
     if (debouncedSearch.length < 1) return null
+
+    const searchParams = new URLSearchParams()
     searchParams.append('search', debouncedSearch)
     if (schoolOnly) {
       searchParams.append('type', OrganizationType.SCHOOL)

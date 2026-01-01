@@ -1,15 +1,23 @@
-import { redirect } from 'next/navigation'
+import { forbidden, redirect } from 'next/navigation'
 import { getCurrentUser } from './auth/nextjs/server'
 import { MemberRole } from './generated/prisma/client'
 import { prisma } from './prisma/client'
 
-export const requireAuth = async () => {
+export async function requireAuth() {
   const currentUser = await getCurrentUser()
 
   if (currentUser === null) {
     redirect('/sign-in')
   }
 
+  return currentUser
+}
+
+export async function isCurrentUser(userId: string) {
+  const currentUser = await requireAuth()
+  if (currentUser.id !== userId) {
+    forbidden()
+  }
   return currentUser
 }
 
