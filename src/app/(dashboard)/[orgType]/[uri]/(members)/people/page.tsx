@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
-  getOrganizationBySlug,
+  getOrganizationFromUri,
   getOrganizationMembers,
   getOrganizationMembersCount,
 } from '@/features/organizations/server'
@@ -17,13 +17,13 @@ import { UserCard } from '@/features/users/components/UserCard'
 export default async function OrganizationPeoplePage({
   params,
   searchParams,
-}: PageProps<'/[orgType]/[orgSlug]/people'>) {
-  const { orgSlug } = await params
+}: PageProps<'/[orgType]/[uri]/people'>) {
+  const { uri } = await params
   const { start } = await searchParams
 
   const skip = Number(start) || 0
 
-  const organization = await getOrganizationBySlug(orgSlug)
+  const { organization } = await getOrganizationFromUri(uri)
 
   if (organization == null) {
     return notFound()

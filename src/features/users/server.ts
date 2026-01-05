@@ -8,6 +8,7 @@ export const getUserByUsername = async (username: string) => {
   cacheTag(CACHE_KEY.GET_USER_BY_USERNAME(username))
   const user = await prisma.user.findUnique({
     where: { username },
+    include: { location: true },
     omit: { password: true, salt: true, email: true },
   })
   return user

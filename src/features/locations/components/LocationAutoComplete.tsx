@@ -5,6 +5,7 @@ import type { Location } from '@/generated/prisma/browser'
 import { useDebounce } from '@/hooks/use-debounce'
 import { fetcher } from '@/lib/fetch'
 import type { LocationFields } from '../schemas'
+import { displayLocation } from '../utils'
 
 export function LocationAutoComplete() {
   const form = useFormContext<LocationFields>()
@@ -21,21 +22,18 @@ export function LocationAutoComplete() {
     return `/api/locations?${searchParams.toString()}`
   }, fetcher)
 
-  const getOptionLabel = (option: Location) =>
-    `${option.city}, ${option.region}, ${option.country}`
-
   return (
     <AutoComplete
       control={form.control}
       name='locationName'
       label='Location'
       getOptionId={(option) => option.id}
-      getOptionLabel={getOptionLabel}
+      getOptionLabel={displayLocation}
       onSelectValue={(value) => {
         form.setValue('locationId', value)
         const location = data.find((loc) => loc.id === value)
         if (location) {
-          const locationName = getOptionLabel(location)
+          const locationName = displayLocation(location)
           form.setValue('locationName', locationName)
         }
       }}

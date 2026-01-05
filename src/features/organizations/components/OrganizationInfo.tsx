@@ -1,4 +1,5 @@
 import { Building2Icon, SquareArrowOutUpRightIcon } from 'lucide-react'
+import Link from 'next/link'
 import { RouteTabs } from '@/components/RoutesTab'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,9 +19,11 @@ const organizationTabs = [
 ]
 
 export default function OrganizationInfo({
+  adminLink,
   slug,
   organization,
 }: {
+  adminLink?: string
   slug: string
   organization: Organization
 }) {
@@ -32,9 +35,16 @@ export default function OrganizationInfo({
           <Building2Icon className='h-20 w-20 text-primary' />
         </div>
         <CardHeader>
-          <CardTitle className='text-2xl font-bold'>
-            {organization.name}
-          </CardTitle>
+          <div className='flex justify-between'>
+            <CardTitle className='text-2xl font-bold'>
+              {organization.name}
+            </CardTitle>
+            {adminLink && (
+              <Button asChild>
+                <Link href={adminLink}>Admin page</Link>
+              </Button>
+            )}
+          </div>
           <p>
             <span>{industryMap[organization.industry]}</span>
             <span> • </span>

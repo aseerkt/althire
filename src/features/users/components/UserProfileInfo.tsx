@@ -1,5 +1,6 @@
 import { UserIcon } from 'lucide-react'
 import { Card } from '@/components/ui/card'
+import { displayLocation } from '@/features/locations/utils'
 import type { PublicUser } from '../types'
 import { UserInfoForm } from './UserInfoForm'
 
@@ -15,6 +16,11 @@ export function UserProfileInfo({ user }: { user: PublicUser }) {
           <UserInfoForm user={user} />
           <h1 className='text-2xl font-bold'>{user.name}</h1>
           <p>{user.headline}</p>
+          {user.location && (
+            <p className='text-muted-foreground text-sm'>
+              {displayLocation(user.location)}
+            </p>
+          )}
         </div>
       </div>
     </Card>

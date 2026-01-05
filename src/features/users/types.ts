@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { User } from '@/generated/prisma/browser'
+import type { Location, User } from '@/generated/prisma/browser'
 import type { ZodAction } from '@/lib/action'
 
 export type ProfileSectionConfig<TSchema extends z.ZodObject> = {
@@ -12,4 +12,6 @@ export type ProfileSectionConfig<TSchema extends z.ZodObject> = {
   form: React.ComponentType
 }
 
-export type PublicUser = Omit<User, 'email' | 'password' | 'salt'>
+export type PublicUser = Omit<User, 'email' | 'password' | 'salt'> & {
+  location?: Location | null
+}

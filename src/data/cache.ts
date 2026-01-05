@@ -9,7 +9,7 @@ export const CACHE_KEY = {
   GET_JOB_APPLICANTS_COUNT: (jobId: string) =>
     `GET_JOB_APPLICANTS_COUNT:${jobId}`,
 
-  GET_COMPANY_BY_SLUG: (slug: string) => `GET_COMPANY_BY_SLUG:${slug}`,
+  GET_COMPANY_BY_URI: (uri: string) => `GET_COMPANY_BY_ID:${uri}`,
 
   GET_COMPANY_JOB_COUNT: (companyId: string) =>
     `GET_COMPANY_JOB_COUNT:${companyId}`,

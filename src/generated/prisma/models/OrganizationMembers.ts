@@ -207,6 +207,7 @@ export type OrganizationMembersOrderByWithRelationInput = {
 
 export type OrganizationMembersWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  organizationId_userId?: Prisma.OrganizationMembersOrganizationIdUserIdCompoundUniqueInput
   AND?: Prisma.OrganizationMembersWhereInput | Prisma.OrganizationMembersWhereInput[]
   OR?: Prisma.OrganizationMembersWhereInput[]
   NOT?: Prisma.OrganizationMembersWhereInput | Prisma.OrganizationMembersWhereInput[]
@@ -217,7 +218,7 @@ export type OrganizationMembersWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"OrganizationMembers"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id">
+}, "id" | "organizationId_userId">
 
 export type OrganizationMembersOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -312,6 +313,11 @@ export type OrganizationMembersListRelationFilter = {
 
 export type OrganizationMembersOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type OrganizationMembersOrganizationIdUserIdCompoundUniqueInput = {
+  organizationId: string
+  userId: string
 }
 
 export type OrganizationMembersCountOrderByAggregateInput = {

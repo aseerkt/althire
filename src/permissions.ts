@@ -13,7 +13,7 @@ export async function requireAuth() {
   return currentUser
 }
 
-export async function isCurrentUser(userId: string) {
+export async function requireCurrentUser(userId: string) {
   const currentUser = await requireAuth()
   if (currentUser.id !== userId) {
     forbidden()

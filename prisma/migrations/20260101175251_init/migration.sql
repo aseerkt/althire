@@ -160,6 +160,9 @@ CREATE UNIQUE INDEX "Organization_slug_key" ON "Organization"("slug");
 CREATE INDEX "Organization_type_idx" ON "Organization"("type");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "OrganizationMembers_organizationId_userId_key" ON "OrganizationMembers"("organizationId", "userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "JobApplication_userId_jobId_key" ON "JobApplication"("userId", "jobId");
 
 -- AddForeignKey

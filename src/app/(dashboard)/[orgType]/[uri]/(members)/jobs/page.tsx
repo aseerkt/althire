@@ -6,18 +6,18 @@ import {
   getOrganizationJobCount,
   getOrganizationJobs,
 } from '@/features/jobs/server'
-import { getOrganizationBySlug } from '@/features/organizations/server'
+import { getOrganizationFromUri } from '@/features/organizations/server'
 
 export default async function OrganizationJobsPage({
   params,
   searchParams,
-}: PageProps<'/[orgType]/[orgSlug]/jobs'>) {
-  const { orgSlug } = await params
+}: PageProps<'/[orgType]/[uri]/jobs'>) {
+  const { uri } = await params
   const { start } = await searchParams
 
   const skip = Number(start) || 0
 
-  const organization = await getOrganizationBySlug(orgSlug)
+  const { organization } = await getOrganizationFromUri(uri)
 
   if (organization == null) {
     return notFound()

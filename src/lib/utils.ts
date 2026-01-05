@@ -16,6 +16,9 @@ export function slugify(input: string): string {
     .slice(0, 80) // optional: limit slug length
 }
 
+export const isUUID = (value: string) =>
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
+
 export function formatDateFromNow(date: string | Date): string {
   const now = Date.now()
   const past = new Date(date).getTime()

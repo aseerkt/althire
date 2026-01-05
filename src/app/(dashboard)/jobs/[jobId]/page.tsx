@@ -31,7 +31,7 @@ export default async function JobPage({ params }: PageProps<'/jobs/[jobId]'>) {
 
   const totalJobApplicantsCount = await getTotalApplicantsCount(jobId)
 
-  const isAdmin = await hasAdminPrivilege(currentUser.id, job.organizationId)
+  const isAdmin = await hasAdminPrivilege(job.organizationId)
 
   let jobAction: React.JSX.Element | null
 
