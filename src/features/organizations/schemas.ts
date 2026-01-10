@@ -15,18 +15,24 @@ export const createOrganizationSchema = z.object({
       /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
       'URL can only use lowercase alphabet, numeric and hyphen characters',
     ),
-  website: z.httpUrl('Invalid URL').optional(),
+  website: z.httpUrl('Invalid URL').nullable(),
   description: z
     .string()
     .trim()
     .min(20, 'Description must be at least 20 characters')
-    .optional(),
+    .nullable(),
   type: z.enum(OrganizationType, 'Please select an organization type'),
   industry: z.enum(Industry, { error: 'Please select an industry' }),
   size: z.enum(OrganizationSize, {
     error: 'Please select an organization size',
   }),
-  tagline: z.string().optional(),
+  tagline: z.string().nullable(),
+})
+
+export const editOrganizationSchema = createOrganizationSchema.extend({
+  id: z.uuid(),
 })
 
 export type CreateOrganizationData = z.infer<typeof createOrganizationSchema>
+
+export type EditOrganizationData = z.infer<typeof editOrganizationSchema>

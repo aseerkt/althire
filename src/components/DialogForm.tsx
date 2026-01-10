@@ -10,12 +10,13 @@ import {
   DialogContent,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { showAlert } from './AlertDialogProvider'
 import { Button } from './ui/button'
 import { DialogFooter, DialogHeader } from './ui/dialog'
 
 type DialogFormProps<TFormValues extends FieldValues> = {
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChange?: (open?: boolean) => void
   form: UseFormReturn<TFormValues>
   onSubmit: () => void
   formTitle: ReactNode
@@ -34,8 +35,25 @@ export function DialogForm<TFormValues extends FieldValues>({
   isPending = false,
   dialogKey,
 }: DialogFormProps<TFormValues>) {
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      form.reset()
+
+      if (form.formState.isDirty) {
+        return showAlert({
+          title: 'Discard changes',
+          description: 'Are you sure you want to discard the changes you made?',
+          confirmText: 'Discard',
+          cancelText: 'No thanks',
+          onConfirm: onOpenChange,
+        })
+      }
+    }
+    onOpenChange?.(open)
+  }
+
   return (
-    <Dialog modal key={dialogKey} open={open} onOpenChange={onOpenChange}>
+    <Dialog modal key={dialogKey} open={open} onOpenChange={handleOpenChange}>
       <FormProvider {...form} key={dialogKey}>
         <form onSubmit={onSubmit} id='dialog-form'>
           <DialogContent className='sm:max-w-112.5 max-h-[calc(100dvh-100px)] flex flex-col gap-0 p-0'>

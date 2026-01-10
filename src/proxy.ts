@@ -45,7 +45,7 @@ export async function proxy(request: NextRequest) {
     if (match) {
       const [, orgType, uri, adminPath] = match
 
-      const { org, isID } = await getOrgFromCache(orgType, uri)
+      const { org, isID } = await getOrgFromCache(uri)
 
       if (!org) {
         return proxyNotFound()

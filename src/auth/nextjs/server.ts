@@ -2,7 +2,7 @@ import { cacheTag } from 'next/cache'
 import { cookies } from 'next/headers'
 import { CACHE_KEY } from '@/data/cache'
 import { prisma } from '@/prisma/client'
-import { getUserSessionById } from '@/redis'
+import { getUserSessionById } from '@/redis/actions'
 import { getSessionCookie } from '../core/session'
 
 const _getCurrentUser = async (sessionId: string) => {

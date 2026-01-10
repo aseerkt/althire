@@ -4,7 +4,7 @@ import {
   deleteUserSessionById,
   getUserSessionById,
   setUserSession,
-} from '@/redis'
+} from '@/redis/actions'
 
 const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7 // 7 days
 const SESSION_COOKIE_NAME = 'session-id'

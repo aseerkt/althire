@@ -1,7 +1,6 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
 import type { FieldValues } from 'react-hook-form'
-import { showAlert } from '@/components/AlertDialogProvider'
 import { DialogForm } from '@/components/DialogForm'
 import { useZodFormAction } from '@/hooks/use-zod-form-action'
 import { type UserProfileSection, userProfileSections } from '../data'
@@ -38,37 +37,18 @@ export function UserProfileSectionForm({
     action:
       mode === 'ADD' ? currentSection.createAction : currentSection.editAction,
     defaultValues: mode === 'EDIT' ? initialData : currentSection.defaultValues,
-    onSuccess: redirectBack,
+    onSuccess: redirectToProfilePage,
   })
 
-  function redirectBack() {
+  function redirectToProfilePage() {
     router.push(`/alt/${username}`)
-  }
-
-  function redirectBackWithReset() {
-    form.reset()
-    redirectBack()
-  }
-
-  function handleClose() {
-    if (form.formState.isDirty) {
-      showAlert({
-        title: 'Discard changes',
-        description: 'Are you sure you want to discard the changes you made?',
-        confirmText: 'Discard',
-        cancelText: 'No thanks',
-        onConfirm: redirectBackWithReset,
-      })
-    } else {
-      redirectBackWithReset()
-    }
   }
 
   return (
     <DialogForm
       dialogKey={pathname}
       open
-      onOpenChange={handleClose}
+      onOpenChange={redirectToProfilePage}
       formTitle={
         mode === 'ADD'
           ? currentSection.addFormTitle

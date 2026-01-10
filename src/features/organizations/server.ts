@@ -23,7 +23,7 @@ export async function getOrganizationFromUri(uri: string) {
   return { isID, organization }
 }
 
-export const getOrgFromCache = async (orgType: string, uri: string) => {
+export const getOrgFromCache = async (uri: string) => {
   let orgId: string | null
 
   const isID = isUUID(uri)
@@ -31,11 +31,11 @@ export const getOrgFromCache = async (orgType: string, uri: string) => {
   if (isID) {
     orgId = uri
   } else {
-    orgId = await redis.get(REDIS_CACHE_KEYS.ORG_ID_FROM_SLUG(orgType, uri))
+    orgId = await redis.get(REDIS_CACHE_KEYS.ORG_ID_FROM_SLUG(uri))
   }
 
   if (orgId) {
-    const cached = await redis.get(REDIS_CACHE_KEYS.ORG_BY_ID(orgType, orgId))
+    const cached = await redis.get(REDIS_CACHE_KEYS.ORG_BY_ID(orgId))
     if (cached) {
       return { org: JSON.parse(cached), isID }
     }
@@ -48,8 +48,8 @@ export const getOrgFromCache = async (orgType: string, uri: string) => {
   if (!org) return { org: null, isID }
 
   await redis.mset({
-    [REDIS_CACHE_KEYS.ORG_BY_ID(orgType, org.id)]: JSON.stringify(org),
-    [REDIS_CACHE_KEYS.ORG_ID_FROM_SLUG(orgType, org.slug)]: org.id,
+    [REDIS_CACHE_KEYS.ORG_BY_ID(org.id)]: JSON.stringify(org),
+    [REDIS_CACHE_KEYS.ORG_ID_FROM_SLUG(org.slug)]: org.id,
   })
 
   return { org, isID }

@@ -4,7 +4,6 @@ import {
   PopoverTrigger,
 } from '@radix-ui/react-popover'
 import { CalendarIcon } from 'lucide-react'
-import { useState } from 'react'
 import { Controller, type FieldValues } from 'react-hook-form'
 import { date } from 'zod'
 import {
@@ -13,6 +12,7 @@ import {
   FieldError,
   FieldLabel,
 } from '@/components/ui/field'
+import { useDisclosure } from '@/hooks/use-disclosure'
 import { formatLocaleDateString } from '@/lib/utils'
 import type { FieldProps } from '@/types'
 import { Button } from '../ui/button'
@@ -29,7 +29,7 @@ export const DateField = <TFieldValues extends FieldValues>({
   description,
   ...props
 }: DateFieldProps<TFieldValues>) => {
-  const [open, setOpen] = useState(false)
+  const { open, toggleOpen } = useDisclosure(false)
 
   return (
     <Controller
@@ -38,7 +38,7 @@ export const DateField = <TFieldValues extends FieldValues>({
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid} aria-disabled={props.disabled}>
           {label && <FieldLabel htmlFor={field.name}>{label}</FieldLabel>}
-          <Popover open={open} onOpenChange={setOpen} modal>
+          <Popover open={open} onOpenChange={toggleOpen} modal>
             <PopoverTrigger asChild>
               <Button
                 variant='outline'
@@ -66,7 +66,7 @@ export const DateField = <TFieldValues extends FieldValues>({
                 month={field.value}
                 onSelect={(date) => {
                   field.onChange(date)
-                  setOpen(false)
+                  toggleOpen()
                 }}
                 onMonthChange={field.onChange}
               />

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Controller, type FieldValues } from 'react-hook-form'
 import {
   Command,
@@ -7,6 +6,7 @@ import {
   CommandList,
 } from '@/components/ui/command'
 import { Popover, PopoverAnchor, PopoverContent } from '@/components/ui/popover'
+import { useDisclosure } from '@/hooks/use-disclosure'
 import type { FieldProps } from '@/types'
 import { Field, FieldDescription, FieldError, FieldLabel } from '../ui/field'
 import { Input } from '../ui/input'
@@ -36,7 +36,7 @@ export const AutoComplete = <TFieldValues extends FieldValues, TData>({
   onSelectValue,
   inputProps,
 }: AutoCompleteProps<TFieldValues, TData>) => {
-  const [open, setOpen] = useState(false)
+  const { open, toggleOpen } = useDisclosure(false)
 
   return (
     <Controller
@@ -45,14 +45,14 @@ export const AutoComplete = <TFieldValues extends FieldValues, TData>({
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
           {label && <FieldLabel htmlFor={field.name}>{label}</FieldLabel>}
-          <Popover modal open={open} onOpenChange={setOpen}>
+          <Popover modal open={open} onOpenChange={toggleOpen}>
             <PopoverAnchor>
               <Input
                 {...inputProps}
                 {...field}
                 id={field.name}
                 onChange={(e) => {
-                  setOpen(true)
+                  toggleOpen()
                   field.onChange(e)
                   inputProps.onChange?.(e)
                 }}
@@ -74,7 +74,7 @@ export const AutoComplete = <TFieldValues extends FieldValues, TData>({
                           value={getOptionId(option)}
                           onSelect={(value) => {
                             onSelectValue(value)
-                            setOpen(false)
+                            toggleOpen()
                           }}
                         >
                           {getOptionLabel(option)}
